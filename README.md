@@ -49,7 +49,7 @@ As entidades, os CRUDs, as regras de negócio, a persistência com Dapper, o scr
 
 | Componente | Tecnologia | Situação |
 | --- | --- | --- |
-| Portal da P2 | C# e ASP.NET Core MVC, com alvo .NET 8 | Estrutura inicial |
+| Portal | C# e ASP.NET Core MVC, com alvo .NET 8 | Estrutura inicial |
 | Interface do portal | Razor, HTML e CSS | Página inicial; telas futuras pendentes |
 | Acesso a dados | Dapper e ADO.NET | Exigência do projeto; implementação e pacotes pendentes |
 | Banco relacional | PostgreSQL | Proposta alinhada ao LiteArt; confirmar com a equipe |
