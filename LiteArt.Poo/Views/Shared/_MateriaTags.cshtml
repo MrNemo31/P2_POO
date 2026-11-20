@@ -1,0 +1,7 @@
+@model IReadOnlyList<MateriaOpcao>
+<div class="tags" aria-label="Matérias">
+    @foreach (var materia in Model)
+    {
+        <span class="tag">@materia.Nome</span>
+    }
+</div>

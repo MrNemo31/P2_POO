@@ -1,0 +1,41 @@
+@model BancoQuestoesViewModel
+@{
+    ViewData["Title"] = "Banco de questões";
+}
+<div class="page-heading"><div><p class="eyebrow">GESTÃO DE CONTEÚDO</p><h1>Banco de questões</h1><p class="lead">Consulte, cadastre e revise as questões do portal.</p></div><a class="button button-primary" href="@Url.Content("~/Questoes/Nova")"><span aria-hidden="true">＋</span> Nova questão</a></div>
+<section class="panel" aria-label="Lista de questões">
+    <div class="panel-toolbar">
+        <form method="get" asp-route="QuestoesIndex" class="filter-form">
+            <div class="field compact"><label for="materiaId">Filtrar por matéria</label><select id="materiaId" name="materiaId"><option value="">Todas as matérias</option>@foreach (var materia in Model.Materias) { <option value="@materia.Id" selected="@(Model.MateriaId == materia.Id)">@materia.Nome</option> }</select></div>
+            <button class="button button-secondary" type="submit">Filtrar</button>
+            @if (Model.MateriaId.HasValue) { <a class="text-link" asp-route="QuestoesIndex">Limpar filtro</a> }
+        </form>
+        <span class="result-count">@Model.Questoes.Count @(Model.Questoes.Count == 1 ? "questão" : "questões")</span>
+    </div>
+    @if (Model.Questoes.Count == 0)
+    {
+        <div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h2>@(Model.MateriaId.HasValue ? "Nenhuma questão nesta matéria" : "Seu banco de questões está vazio")</h2><p>@(Model.MateriaId.HasValue ? "Escolha outra matéria ou remova o filtro para consultar o banco completo." : "As questões serão exibidas após a integração com o back-end.")</p><a class="button button-secondary" href="@Url.Content(Model.MateriaId.HasValue ? "~/Questoes" : "~/Questoes/Nova")">@(Model.MateriaId.HasValue ? "Ver todas as questões" : "Nova questão")</a></div>
+    }
+    else
+    {
+        <div class="list-labels" aria-hidden="true"><span>ENUNCIADO E MATÉRIAS</span><span>TIPO</span><span>AÇÕES</span></div>
+        <ul class="question-list">
+            @foreach (var questao in Model.Questoes)
+            {
+                <li class="question-row"><div class="question-main"><span class="item-number">QUESTÃO @questao.Id.ToString("D2")</span><h2>@questao.Trecho</h2><partial name="_MateriaTags" model="questao.Materias" /></div><span class="type-label">@questao.TipoTexto</span><div class="row-actions"><a class="small-link" href="@Url.Content($"~/Questoes/Editar/{questao.Id}")" aria-label="Editar questão @questao.Id">Editar</a><a class="small-link danger-link" href="@Url.Content($"~/Questoes/Excluir/{questao.Id}")" aria-label="Excluir questão @questao.Id">Excluir</a></div></li>
+            }
+        </ul>
+    }
+</section>
+<p class="page-footnote">Uma questão pode reunir várias matérias e aparece apenas uma vez na lista.</p>
+@if (Model.Materias.Count == 0)
+{
+    <p class="page-footnote">Nenhuma matéria disponível. A lista de matérias aguarda integração com o back-end.</p>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/banco-questoes.js" asp-append-version="true" defer></script>
+}
