@@ -1,13 +1,38 @@
+@{
+    var pagina = ViewContext.RouteData.Values["controller"]?.ToString();
+}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - LiteArt POO</title>
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <script src="~/js/layout.js" asp-append-version="true" defer></script>
 </head>
 <body>
-    <header><a asp-controller="Home" asp-action="Index">LiteArt POO</a></header>
-    <main>@RenderBody()</main>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="@Url.Content("~/")" aria-label="LiteArt POO, início">
+                <img class="brand-logo" src="~/images/liteart-logo.jpg" alt="" width="52" height="52" />
+                <span>LiteArt</span>
+            </a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navegacao">Menu <span aria-hidden="true">☰</span></button>
+            <nav id="navegacao" aria-label="Navegação principal">
+                <a href="@Url.Content("~/")" aria-current="@(pagina == "Home" ? "page" : null)">Início</a>
+                <a href="@Url.Content("~/Estudo")" aria-current="@(pagina == "Estudo" ? "page" : null)">Prévia de resolução</a>
+                <a href="@Url.Content("~/Questoes")" aria-current="@(pagina == "Questoes" ? "page" : null)">Banco de questões</a>
+                <a href="@Url.Content("~/Historico")" aria-current="@(pagina == "Historico" ? "page" : null)">Histórico</a>
+            </nav>
+        </div>
+    </header>
+    <main id="conteudo" class="container" tabindex="-1">
+        <div class="preview-note"><span class="preview-dot" aria-hidden="true"></span><strong>Modo de prévia</strong><span>Carregamento de dados e ações aguardam integração com o back-end.</span></div>
+        @RenderBody()
+    </main>
+    <footer class="site-footer"><div class="container footer-inner"><span><strong>LiteArt POO</strong></span><span>Projeto acadêmico · FATEC Ribeirão Preto</span></div></footer>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

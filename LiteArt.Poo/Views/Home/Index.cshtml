@@ -1,6 +1,28 @@
 @{
     ViewData["Title"] = "Início";
 }
-<h1>LiteArt POO</h1>
-<p>Portal de estudos para vestibulares.</p>
-<p>Projeto em preparação para a P2 de Programação Orientada a Objetos.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+<section class="home-hero" aria-labelledby="titulo-inicio">
+    <div class="hero-copy">
+        <p class="eyebrow">PAINEL ADMINISTRATIVO</p>
+        <h1 id="titulo-inicio">Gestão de conteúdo.<br /><em>Questões em ordem.</em></h1>
+        <p class="lead">Cadastre e revise questões, organize as matérias e consulte as tentativas dos alunos em um só lugar.</p>
+        <a class="button button-primary" href="@Url.Content("~/Questoes")">Gerenciar questões <span aria-hidden="true">↗</span></a>
+        <p class="hero-footnote">Administração do portal LiteArt POO.</p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+        <span class="art-spark spark-one">✦</span><span class="art-spark spark-two">✦</span>
+        <div class="art-orbit"></div>
+        <div class="book"><div class="book-left"><span></span><span></span><span></span><span></span></div><div class="book-right"><span></span><span></span><span></span><span></span></div></div>
+        <span class="art-note">Conteúdo bem organizado.</span><span class="art-check">✓</span>
+    </div>
+</section>
+<section aria-labelledby="titulo-caminhos" class="home-paths">
+    <div class="section-heading"><div><p class="eyebrow">ÁREA DE ADMINISTRAÇÃO</p><h2 id="titulo-caminhos">Ferramentas de gerenciamento</h2></div><span class="muted">Organize o banco e confira a apresentação das questões.</span></div>
+    <div class="path-grid">
+        <a class="path-card" href="@Url.Content("~/Questoes")"><span class="card-icon" aria-hidden="true">▤</span><span class="path-number">01 / GERENCIAR</span><h3>Banco de questões</h3><p>Consulte o conteúdo cadastrado, revise enunciados e organize as matérias e os gabaritos.</p><span class="card-link">Gerenciar questões <span aria-hidden="true">↗</span></span></a>
+        <a class="path-card" href="@Url.Content("~/Estudo")"><span class="card-icon" aria-hidden="true">✎</span><span class="path-number">02 / CONFERIR</span><h3>Prévia de resolução</h3><p>Confira como os enunciados, as alternativas e o feedback serão apresentados aos alunos.</p><span class="card-link">Visualizar questões <span aria-hidden="true">↗</span></span></a>
+    </div>
+</section>
