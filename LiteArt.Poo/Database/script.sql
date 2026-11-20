@@ -1,0 +1,4 @@
+-- LiteArt POO - PostgreSQL (proposta a confirmar com a equipe).
+-- Arquivo reservado para a próxima etapa; não contém SQL executável.
+-- Implementar o DDL das entidades e relacionamentos após validar a modelagem.
+-- Incluir de 5 a 10 registros fictícios por tabela no DML da entrega final.

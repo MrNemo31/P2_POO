@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - LiteArt POO</title>
+</head>
+<body>
+    <header><a asp-controller="Home" asp-action="Index">LiteArt POO</a></header>
+    <main>@RenderBody()</main>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
