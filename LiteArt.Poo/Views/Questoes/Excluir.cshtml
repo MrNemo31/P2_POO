@@ -1,0 +1,27 @@
+@model QuestaoPreviaViewModel?
+@{
+    ViewData["Title"] = "Excluir questão";
+}
+<a class="back-link" asp-route="QuestoesIndex">← Banco de questões</a>
+<div class="page-heading"><div><p class="eyebrow">REVISE ANTES DE CONTINUAR</p><h1>Excluir questão</h1><p class="lead">Confira a questão selecionada antes de confirmar.</p></div></div>
+@if (Model is null)
+{
+    <div class="panel empty-state"><h2>Nenhuma questão carregada</h2><p>A confirmação de exclusão ficará disponível após a integração com o back-end.</p></div>
+}
+else
+{
+<section class="panel confirmation-panel">
+    <span class="item-number">QUESTÃO @Model.Id.ToString("D2") · @Model.TipoTexto</span><h2 class="question-full">@Model.Enunciado</h2><partial name="_MateriaTags" model="Model.Materias" />
+    @if (Model.TemTentativas) { <div class="notice notice-warning"><strong>Esta questão tem tentativas registradas</strong><p>A exclusão está indisponível nesta prévia. A verificação definitiva será feita pelo back-end.</p></div> }
+    else { <div class="notice"><strong>Deseja confirmar a exclusão?</strong><p>A exclusão aguarda integração com o back-end.</p></div> }
+    <form class="confirmation-actions" data-question-delete><a class="button button-secondary" asp-route="QuestoesIndex">Cancelar</a><button class="button button-danger" type="submit" disabled>Confirmar exclusão</button></form>
+</section>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/questao-exclusao.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/questao-exclusao.js" asp-append-version="true" defer></script>
+}
