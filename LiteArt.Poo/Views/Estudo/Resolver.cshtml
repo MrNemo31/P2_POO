@@ -1,0 +1,39 @@
+@model ResolverViewModel
+@{
+    ViewData["Title"] = "Conferir resolução";
+}
+<a class="back-link" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">← Prévia de resolução</a>
+<div class="page-heading"><div><p class="eyebrow">CONFERÊNCIA DE CONTEÚDO</p><h1>Conferir resolução</h1><p class="lead">Revise o enunciado e as opções de resposta como serão exibidos ao aluno.</p></div></div>
+@if (Model.Questao is null)
+{
+    <div class="panel empty-state"><h2>Nenhuma questão carregada</h2><p>A visualização da questão ficará disponível após a integração com o back-end.</p></div>
+}
+else
+{
+<form class="panel solve-panel" data-resolution-form novalidate>
+    <input asp-for="MateriaId" type="hidden" />
+    <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+    <div class="field student-field"><label asp-for="AlunoId">Aluno</label><select asp-for="AlunoId"><option value="">Selecione um aluno</option>@foreach (var aluno in Model.Alunos) { <option value="@aluno.Id">@aluno.Nome</option> }</select><span asp-validation-for="AlunoId" class="field-error"></span></div>
+    <div class="question-prompt"><span class="item-number">QUESTÃO @Model.Id.ToString("D2") · @Model.Questao.TipoTexto</span><partial name="_MateriaTags" model="Model.Questao.Materias" /><h2 class="question-full">@Model.Questao.Enunciado</h2></div>
+    <fieldset class="answer-options"><legend>Resposta</legend>
+        @if (Model.Questao.Tipo == "MultiplaEscolha")
+        {
+            @for (var i = 0; i < Model.Questao.Alternativas.Count; i++) { <label class="answer-option"><input asp-for="Resposta" type="radio" value="@i" id="resposta-@i" /><span class="option-letter" aria-hidden="true">@((char)('A' + i))</span><span>@Model.Questao.Alternativas[i]</span></label> }
+        }
+        else
+        {
+            <label class="answer-option"><input asp-for="Resposta" type="radio" value="true" id="resposta-verdadeiro" /><span>Verdadeiro</span></label><label class="answer-option"><input asp-for="Resposta" type="radio" value="false" id="resposta-falso" /><span>Falso</span></label>
+        }
+        <span asp-validation-for="Resposta" class="field-error"></span>
+    </fieldset>
+    <div class="solve-actions"><p class="muted">A avaliação e o registro de respostas aguardam integração com o back-end.</p><div><a class="button button-secondary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">Voltar</a><button class="button button-primary" type="submit" disabled>Enviar resposta</button></div></div>
+</form>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/questao-resolucao.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/questao-resolucao.js" asp-append-version="true" defer></script>
+}

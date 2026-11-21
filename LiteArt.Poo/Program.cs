@@ -11,6 +11,7 @@ app.UseRouting();
 
 // Rota de apresentação do banco de questões; não altera dados.
 app.MapearBancoDeQuestoesPrevia();
+app.MapearResolucaoQuestaoPrevia();
 app.MapearExclusaoQuestaoPrevia();
 
 app.MapControllerRoute(
