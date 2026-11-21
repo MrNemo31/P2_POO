@@ -1,0 +1,22 @@
+@model QuestaoFormularioViewModel
+@{
+    ViewData["Title"] = "Editar questão";
+}
+<a class="back-link" asp-route="QuestoesIndex">← Banco de questões</a>
+<div class="page-heading"><div><p class="eyebrow">CUIDE DOS DETALHES</p><h1>Editar questão</h1><p class="lead">Revise o enunciado, as matérias e o gabarito.</p></div></div>
+@if (Model.AguardandoDados)
+{
+    <div class="panel empty-state"><h2>Dados da questão indisponíveis</h2><p>A edição ficará disponível após a integração com o back-end.</p></div>
+}
+else
+{
+    <partial name="_Formulario" model="Model" />
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/questao-formulario.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/questao-formulario.js" asp-append-version="true" defer></script>
+}

@@ -1,0 +1,15 @@
+@model QuestaoFormularioViewModel
+@{
+    ViewData["Title"] = "Nova questão";
+}
+<a class="back-link" asp-route="QuestoesIndex">← Banco de questões</a>
+<div class="page-heading"><div><p class="eyebrow">CADASTRO DE CONTEÚDO</p><h1>Nova questão</h1><p class="lead">Defina o enunciado, as matérias e o gabarito da questão.</p></div></div>
+<partial name="_Formulario" model="Model" />
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/questao-formulario.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/questao-formulario.js" asp-append-version="true" defer></script>
+}

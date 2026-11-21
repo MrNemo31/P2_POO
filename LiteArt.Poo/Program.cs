@@ -14,6 +14,7 @@ app.MapearBancoDeQuestoesPrevia();
 app.MapearResolucaoQuestaoPrevia();
 app.MapearExclusaoQuestaoPrevia();
 app.MapearHistoricoPrevia();
+app.MapearFormularioQuestaoPrevia();
 
 app.MapControllerRoute(
     name: "default",
