@@ -13,6 +13,7 @@ app.UseRouting();
 app.MapearBancoDeQuestoesPrevia();
 app.MapearResolucaoQuestaoPrevia();
 app.MapearExclusaoQuestaoPrevia();
+app.MapearHistoricoPrevia();
 
 app.MapControllerRoute(
     name: "default",

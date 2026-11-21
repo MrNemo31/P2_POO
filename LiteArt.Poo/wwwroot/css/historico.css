@@ -1,0 +1,7 @@
+.history-list .question-row { grid-template-columns: 1fr auto; }
+.result-badge { padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.result-success { color: #234f3d; background: #eaf0e5; }
+.result-error { color: #842d25; background: #f8e9e1; }
+@media (max-width: 780px) {
+    .history-list .question-row { gap: 12px; }
+}
