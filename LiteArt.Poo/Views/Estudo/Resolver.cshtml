@@ -26,6 +26,12 @@ else
         }
         <span asp-validation-for="Resposta" class="field-error"></span>
     </fieldset>
+    @if (Model.Acertou is bool acertou)
+    {
+        <div class="feedback @(acertou ? "feedback-success" : "feedback-error")" role="status" aria-label="Resultado da resposta" aria-live="polite" aria-atomic="true">
+            <strong>@(acertou ? "Resposta correta." : "Resposta incorreta.")</strong>
+        </div>
+    }
     <div class="solve-actions"><p class="muted">A avaliação e o registro de respostas aguardam integração com o back-end.</p><div><a class="button button-secondary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">Voltar</a><button class="button button-primary" type="submit" disabled>Enviar resposta</button></div></div>
 </form>
 }
