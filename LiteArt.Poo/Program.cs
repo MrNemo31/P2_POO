@@ -13,6 +13,8 @@ builder.Services.AddSingleton<DatabaseConnection>();
 //cria uma instância do repositório para cada requisição HTTP e reutiliza essa instância durante aquela requisição.
 builder.Services.AddScoped<IMateriaRepository, MateriaRepository>();
 
+builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+
 var app = builder.Build();
 
 app.UseStaticFiles();
