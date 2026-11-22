@@ -15,6 +15,8 @@ builder.Services.AddScoped<IMateriaRepository, MateriaRepository>();
 
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 
+builder.Services.AddScoped<IQuestaoRepository, QuestaoRepository>();
+
 var app = builder.Build();
 
 app.UseStaticFiles();
