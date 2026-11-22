@@ -7,6 +7,21 @@
 
 <h1>Matérias cadastradas</h1>
 
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Erro"]
+    </div>
+}
+
+<p>
+    <a asp-controller="Materia"
+       asp-action="Create"
+       class="btn btn-primary">
+        Nova matéria
+    </a>
+</p>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -14,8 +29,10 @@
             <th>Nome</th>
             <th>Descrição</th>
             <th>ID do Administrador</th>
+            <th>Ações</th>
         </tr>
     </thead>
+
     <tbody>
         @foreach (var materia in Model)
         {
@@ -24,6 +41,29 @@
                 <td>@materia.Nome</td>
                 <td>@materia.Descricao</td>
                 <td>@materia.IdAdministrador</td>
+
+                <td>
+                    <a asp-controller="Materia"
+                       asp-action="Edit"
+                       asp-route-id="@materia.IdMateria"
+                       class="btn btn-warning btn-sm">
+                        Editar
+                    </a>
+
+                    <form asp-controller="Materia"
+                          asp-action="Delete"
+                          asp-route-id="@materia.IdMateria"
+                          method="post"
+                          style="display:inline;">
+
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Tem certeza que deseja excluir esta matéria?');">
+                            Excluir
+                        </button>
+
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

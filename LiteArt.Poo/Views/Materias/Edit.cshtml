@@ -1,0 +1,45 @@
+
+@model LiteArt.Poo.Models.Entities.Materia
+
+@{
+    ViewData["Title"] = "Editar Matéria";
+}
+
+<h1>Editar Matéria</h1>
+
+<form asp-controller="Materia" asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="IdMateria" />
+
+    <div class="mb-3">
+        <label asp-for="Nome" class="form-label">
+            Nome da matéria
+        </label>
+        <input asp-for="Nome" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Descricao" class="form-label">
+            Descrição
+        </label>
+        <textarea asp-for="Descricao" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IdAdministrador" class="form-label">
+            ID do administrador
+        </label>
+        <input asp-for="IdAdministrador" type="number"
+               class="form-control" min="1" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Salvar alterações
+    </button>
+
+    <a asp-controller="Materia" asp-action="Index"
+       class="btn btn-secondary">
+        Cancelar
+    </a>
+
+</form>
