@@ -9,6 +9,8 @@ public class ResolverViewModel
     public int? AlunoId { get; set; }
     public int? MateriaId { get; set; }
     public string? Resposta { get; set; }
+    // Resultado fornecido pelo back-end após o envio. Nulo mantém o feedback oculto.
+    public bool? Acertou { get; set; }
     public QuestaoPreviaViewModel? Questao { get; set; }
     public IReadOnlyList<AlunoOpcao> Alunos { get; set; } = [];
 }

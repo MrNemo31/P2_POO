@@ -1,0 +1,23 @@
+@model QuestaoFormularioViewModel
+
+<form class="panel form-panel" data-question-form novalidate>
+    <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+    <div class="form-section"><div class="form-section-title"><span class="step-number">01</span><div><h2>Enunciado e matérias</h2><p>Organize as informações da questão.</p></div></div>
+        <div class="field"><label asp-for="Enunciado">Enunciado <span class="required-label">obrigatório</span></label><textarea asp-for="Enunciado" rows="5" maxlength="2000" required placeholder="Escreva aqui o enunciado completo da questão…" aria-describedby="enunciado-ajuda"></textarea><span id="enunciado-ajuda" class="field-hint">Até 2.000 caracteres.</span><span asp-validation-for="Enunciado" class="field-error"></span></div>
+        <fieldset class="field"><legend>Matérias <span class="required-label">uma ou mais</span></legend><p class="field-hint" id="materias-ajuda">Marque todas as matérias relacionadas a esta questão.</p><div class="choice-grid" aria-describedby="materias-ajuda">@foreach (var materia in Model.Materias) { <label class="choice-pill"><input type="checkbox" name="MateriaIds" value="@materia.Id" checked="@(Model.MateriaIds.Contains(materia.Id))" /> @materia.Nome</label> }</div><span asp-validation-for="MateriaIds" class="field-error"></span>
+            @if (Model.Materias.Count == 0) { <p class="field-hint">Nenhuma matéria disponível. Aguarde a integração com o back-end.</p> }
+        </fieldset>
+    </div>
+    <div class="form-section"><div class="form-section-title"><span class="step-number">02</span><div><h2>O formato e a resposta</h2><p>Escolha como a questão será respondida.</p></div></div>
+        <div class="field type-field"><label asp-for="Tipo">Tipo da questão</label><select asp-for="Tipo" data-question-type><option value="MultiplaEscolha">Múltipla escolha</option><option value="VerdadeiroFalso">Verdadeiro/falso</option></select><span asp-validation-for="Tipo" class="field-error"></span></div>
+        <fieldset class="answer-fields" data-type-fields="MultiplaEscolha"><legend>Alternativas</legend><p class="field-hint">Preencha as quatro opções e marque o círculo da resposta correta.</p>
+            @for (var i = 0; i < 4; i++)
+            {
+                <div class="alternative-field"><label class="correct-choice" for="correta-@i"><input asp-for="AlternativaCorreta" type="radio" value="@i" id="correta-@i" /><span aria-hidden="true">@((char)('A' + i))</span><span class="sr-only">Alternativa @((char)('A' + i)) correta</span></label><div class="field"><label class="sr-only" asp-for="Alternativas[i]">Texto da alternativa @((char)('A' + i))</label><input asp-for="Alternativas[i]" maxlength="500" placeholder="Alternativa @((char)('A' + i))" /><span asp-validation-for="Alternativas[i]" class="field-error"></span></div></div>
+            }
+            <span asp-validation-for="AlternativaCorreta" class="field-error"></span>
+        </fieldset>
+        <fieldset class="answer-fields" data-type-fields="VerdadeiroFalso"><legend>Gabarito</legend><p class="field-hint">Qual é a resposta correta para a afirmação?</p><div class="choice-grid"><label class="choice-pill"><input asp-for="GabaritoVf" type="radio" value="true" id="gabarito-verdadeiro" /> Verdadeiro</label><label class="choice-pill"><input asp-for="GabaritoVf" type="radio" value="false" id="gabarito-falso" /> Falso</label></div><span asp-validation-for="GabaritoVf" class="field-error"></span></fieldset>
+    </div>
+    <div class="form-actions"><p class="muted">Cadastro e alterações aguardam integração com o back-end.</p><div><a class="button button-secondary" asp-route="QuestoesIndex">Cancelar</a><button class="button button-primary" type="submit" disabled>Salvar</button></div></div>
+</form>

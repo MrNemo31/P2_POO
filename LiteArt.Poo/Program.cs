@@ -9,13 +9,12 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Rota de apresentação do banco de questões; não altera dados.
+// Somente rotas GET para visualizar as páginas. Sem ações de controllers.
 app.MapearBancoDeQuestoesPrevia();
 app.MapearResolucaoQuestaoPrevia();
 app.MapearExclusaoQuestaoPrevia();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapearHistoricoPrevia();
+app.MapearFormularioQuestaoPrevia();
+app.MapearPaginasDePrevia();
 
 app.Run();
