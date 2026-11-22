@@ -1,4 +1,4 @@
-
+// Responsavel pela conecção com o banco de dados(Postgre)
 using Npgsql;
 
 namespace LiteArt.Poo.Data

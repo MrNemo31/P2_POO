@@ -1,0 +1,30 @@
+
+@model IEnumerable<LiteArt.Poo.Models.Entities.Materia>
+
+@{
+    ViewData["Title"] = "Matérias";
+}
+
+<h1>Matérias cadastradas</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>ID do Administrador</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var materia in Model)
+        {
+            <tr>
+                <td>@materia.IdMateria</td>
+                <td>@materia.Nome</td>
+                <td>@materia.Descricao</td>
+                <td>@materia.IdAdministrador</td>
+            </tr>
+        }
+    </tbody>
+</table>

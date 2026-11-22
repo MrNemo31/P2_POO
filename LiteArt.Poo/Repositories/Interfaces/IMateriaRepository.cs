@@ -1,3 +1,5 @@
+// Arquivo responsavel pela listagem das implementações que devem ser feitas(Função de uma Interface)
+
 
 using LiteArt.Poo.Models.Entities;
 
