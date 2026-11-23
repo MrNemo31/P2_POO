@@ -33,10 +33,10 @@ namespace LiteArt.Poo.Models.Entities
             }
             else
             {
-                this.Nome = Nome;
+                this.Nome = Nome.Trim();
             }
             if (ValidarEmail(Email))
-                this.Email = Email;
+                this.Email = Email.Trim();
             else
                 throw new ArgumentException("O email do aluno não é válido.", nameof(Email));
         }
@@ -45,6 +45,8 @@ namespace LiteArt.Poo.Models.Entities
             if (tentativa == null)
                 throw new ArgumentNullException(nameof(tentativa), "A tentativa não pode ser nula.");
 
+            if (ReferenceEquals(tentativa.Aluno, this) == false)
+                throw new InvalidOperationException("A tentativa não pertence a este aluno.");    
             Tentativas.Add(tentativa);
         }
     }

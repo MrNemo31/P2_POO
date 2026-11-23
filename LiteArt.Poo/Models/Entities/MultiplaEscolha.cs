@@ -5,7 +5,7 @@ namespace LiteArt.Poo.Models.Entities
     {
         public List<Alternativa> Opcoes { get; private set; } = new List<Alternativa>();
 
-        public MultiplaEscolha(string Enunciado, List<Alternativa> Opcoes) : base(Enunciado)
+        public MultiplaEscolha(string Enunciado, List<Alternativa> Opcoes, Administrador Administrador, List<Materia> Materias) : base(Enunciado, Administrador, Materias)
         {
             int contador = 0;
             
@@ -15,6 +15,11 @@ namespace LiteArt.Poo.Models.Entities
             }
             for (int i = 0; i < Opcoes.Count; i++)
             {
+                if (Opcoes[i] == null)
+                {
+                    throw new ArgumentException($"A opção na posição {i} não pode ser nula.", nameof(Opcoes));
+                }
+                
                 if (Opcoes[i].Correta)
                 {
                     contador += 1;
@@ -25,7 +30,7 @@ namespace LiteArt.Poo.Models.Entities
             {
                 throw new ArgumentException("A questão de múltipla escolha deve ter apenas uma opção correta.", nameof(Opcoes));
             }
-            this.Opcoes = Opcoes;
+            this.Opcoes = new List<Alternativa>(Opcoes);
         }
 
         public override bool AvaliarResposta(string Resposta)

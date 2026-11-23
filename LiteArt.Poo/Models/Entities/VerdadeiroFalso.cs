@@ -4,7 +4,7 @@ namespace LiteArt.Poo.Models.Entities
     {
         public bool RespostaCorreta { get; private set; }
 
-        public VerdadeiroFalso(string Enunciado, bool RespostaCorreta) : base(Enunciado)
+        public VerdadeiroFalso(string Enunciado, bool RespostaCorreta, Administrador Administrador, List<Materia> Materias) : base(Enunciado, Administrador, Materias)
         {
             this.RespostaCorreta = RespostaCorreta;
         }
