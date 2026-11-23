@@ -6,21 +6,46 @@ namespace LiteArt.Poo.Models.Entities
 {
     public class Aluno
     {
-        public string IdAluno {get; set;}    
-        public string Nome { get; set; }
-        public string Email { get; set; }
+        public int IdAluno {get; private set;}    
+        public string Nome { get; private set; }
+        public string Email { get; private set; }
         public List<Tentativa> Tentativas { get; private set; } = new List<Tentativa>();
-        public bool ValidarEmail()
+        private bool ValidarEmail(string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            
             try
             {
-                var mailAddress = new MailAddress(Email);
+                var mailAddress = new MailAddress(email);
                 return true;
             }
             catch (FormatException)
             {
                 return false;
             }
+        }
+        public Aluno(string Nome, string Email)
+        {
+            if (string.IsNullOrWhiteSpace(Nome))
+            {
+                throw new ArgumentException("O nome do aluno não pode ser nulo ou vazio.", nameof(Nome));
+            }
+            else
+            {
+                this.Nome = Nome;
+            }
+            if (ValidarEmail(Email))
+                this.Email = Email;
+            else
+                throw new ArgumentException("O email do aluno não é válido.", nameof(Email));
+        }
+        public void AdicionarTentativa(Tentativa tentativa)
+        {
+            if (tentativa == null)
+                throw new ArgumentNullException(nameof(tentativa), "A tentativa não pode ser nula.");
+
+            Tentativas.Add(tentativa);
         }
     }
 }

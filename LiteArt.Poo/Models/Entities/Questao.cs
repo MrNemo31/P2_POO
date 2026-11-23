@@ -22,7 +22,7 @@ namespace LiteArt.Poo.Models.Entities
         }
     }
     
-    public abstract bool AvaliarResposta(Alternativa Resposta);
+    public abstract bool AvaliarResposta(string Resposta);
     
         public void Ativar()
         {

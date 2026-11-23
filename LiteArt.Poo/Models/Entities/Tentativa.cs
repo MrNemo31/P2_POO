@@ -13,15 +13,11 @@ namespace LiteArt.Poo.Models.Entities
         {
             this.Aluno = aluno ?? throw new ArgumentNullException(nameof(aluno), "O aluno não pode ser nulo.");
             this.Questao = Questao ?? throw new ArgumentNullException(nameof(Questao), "A questão não pode ser nula.");
-            this.Resposta = Resposta ?? throw new ArgumentNullException(nameof(Resposta), "A resposta não pode ser nula.");
-            if (Questao.AvaliarResposta(Resposta))
-            {
-                this.Acertou = true;
-            }
+            if (string.IsNullOrWhiteSpace(Resposta))
+                throw new ArgumentException("A resposta não pode ser nula.", nameof(Resposta));
             else
-            {
-                this.Acertou = false;
-            }
+                this.Resposta = Resposta;
+            this.Acertou = Questao.AvaliarResposta(Resposta);
             this.DataHora = DateTime.Now;
         }
     }

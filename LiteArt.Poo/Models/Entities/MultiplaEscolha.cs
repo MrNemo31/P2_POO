@@ -15,7 +15,7 @@ namespace LiteArt.Poo.Models.Entities
             }
             for (int i = 0; i < Opcoes.Count; i++)
             {
-                if (Opcoes[i].Correta == true)
+                if (Opcoes[i].Correta)
                 {
                     contador += 1;
                 }
@@ -28,14 +28,17 @@ namespace LiteArt.Poo.Models.Entities
             this.Opcoes = Opcoes;
         }
 
-        public override bool AvaliarResposta(Alternativa Resposta)
+        public override bool AvaliarResposta(string Resposta)
         {
-            if (Resposta == null)
+            if (string.IsNullOrWhiteSpace(Resposta))
+                return false;
+
+            if (!int.TryParse(Resposta, out int IdAlternativa))
                 return false;
 
             for (int i = 0; i < Opcoes.Count; i++)
             {
-                if (Opcoes[i].IdAlternativa == Resposta.IdAlternativa)
+                if (Opcoes[i].IdAlternativa == IdAlternativa)
                 {
                     return Opcoes[i].Correta;
                 }
