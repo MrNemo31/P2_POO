@@ -1,18 +1,37 @@
 
 namespace LiteArt.Poo.Models.Entities
 {
-    public class Questao
+    public abstract class  Questao
     {
-        public int IdQuestao { get; set; }
+        public int IdQuestao { get; private set; }
 
-        public string Enunciado { get; set; } = string.Empty;
+        public string Enunciado { get; private set; } = string.Empty;
 
-        public bool Ativa { get; set; } = true;
+        public bool Ativa { get; private set; } = true;
 
-        public string TipoQuestao { get; set; } = string.Empty;
 
-        public bool? RespostaCorreta { get; set; }
+    protected Questao(string Enunciado)
+    {
+        if (string.IsNullOrWhiteSpace(Enunciado))
+        {
+            throw new ArgumentException("O enunciado não pode ser nulo ou vazio.", nameof(Enunciado));
+        }
+        else
+        {
+            this.Enunciado = Enunciado;
+        }
+    }
+    
+    public abstract bool AvaliarResposta(Alternativa Resposta);
+    
+        public void Ativar()
+        {
+            Ativa = true;
+        }
 
-        public int IdAdministrador { get; set; }
+        public void Desativar()
+        {
+            Ativa = false;
+        }
     }
 }
