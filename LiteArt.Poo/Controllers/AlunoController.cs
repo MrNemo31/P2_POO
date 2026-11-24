@@ -1,4 +1,5 @@
-
+using System.Data.Common;
+using LiteArt.Poo.Models.ViewModels;
 using LiteArt.Poo.Models.Entities;
 using LiteArt.Poo.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,14 @@ namespace LiteArt.Poo.Controllers
     public class AlunoController : Controller
     {
         private readonly IAlunoRepository _alunoRepository;
+        private readonly ILogger<AlunoController> _logger;
 
-        public AlunoController(IAlunoRepository alunoRepository)
+        public AlunoController(
+            IAlunoRepository alunoRepository,
+            ILogger<AlunoController> logger)
         {
             _alunoRepository = alunoRepository;
+            _logger = logger;
         }
 
         // Lista todos os alunos.
@@ -26,22 +31,44 @@ namespace LiteArt.Poo.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View("~/Views/Alunos/Create.cshtml");
+            return View(
+                "~/Views/Alunos/Create.cshtml",
+                new AlunoFormularioViewModel()
+            );
         }
 
-        // Recebe os dados e cadastra o aluno.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Aluno aluno)
+        public async Task<IActionResult> Create(
+            AlunoFormularioViewModel modelo)
         {
             if (!ModelState.IsValid)
             {
-                return View("~/Views/Alunos/Create.cshtml", aluno);
+                return View("~/Views/Alunos/Create.cshtml", modelo);
             }
 
-            await _alunoRepository.Inserir(aluno);
+            try
+            {
+                var aluno = new Aluno(modelo.Nome, modelo.Email);
 
-            return RedirectToAction(nameof(Index));
+                await _alunoRepository.Inserir(aluno);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex, "Erro ao cadastrar aluno.");
+
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Não foi possível cadastrar o aluno. Tente novamente.");
+            }
+
+            return View("~/Views/Alunos/Create.cshtml", modelo);
         }
 
         // Busca o aluno para edição.
@@ -55,27 +82,67 @@ namespace LiteArt.Poo.Controllers
                 return NotFound();
             }
 
-            return View("~/Views/Alunos/Edit.cshtml", aluno);
+            var modelo = new AlunoFormularioViewModel
+            {
+                IdAluno = aluno.IdAluno,
+                Nome = aluno.Nome,
+                Email = aluno.Email
+            };
+
+            return View("~/Views/Alunos/Edit.cshtml", modelo);
         }
 
         // Atualiza os dados do aluno.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Aluno aluno)
+        public async Task<IActionResult> Edit(
+            AlunoFormularioViewModel modelo)
         {
+            if (modelo.IdAluno <= 0)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
-                return View("~/Views/Alunos/Edit.cshtml", aluno);
+                return View("~/Views/Alunos/Edit.cshtml", modelo);
             }
 
-            var atualizado = await _alunoRepository.Atualizar(aluno);
-
-            if (!atualizado)
+            try
             {
-                return NotFound();
+                var aluno = await _alunoRepository.BuscarPorId(
+                    modelo.IdAluno);
+
+                if (aluno == null)
+                {
+                    return NotFound();
+                }
+
+                aluno.EditarDados(modelo.Nome, modelo.Email);
+
+                var atualizado = await _alunoRepository.Atualizar(aluno);
+
+                if (!atualizado)
+                {
+                    return NotFound();
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar aluno.");
+
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Não foi possível atualizar o aluno. Tente novamente.");
             }
 
-            return RedirectToAction(nameof(Index));
+            return View("~/Views/Alunos/Edit.cshtml", modelo);
         }
 
         // Exclui o aluno, caso não possua tentativas registradas.

@@ -1,5 +1,4 @@
-
-@model LiteArt.Poo.Models.Entities.Aluno
+@model AlunoFormularioViewModel
 
 @{
     ViewData["Title"] = "Novo Aluno";
@@ -8,13 +7,17 @@
 <h1>Cadastrar aluno</h1>
 
 <form asp-controller="Aluno" asp-action="Create" method="post">
+    <div asp-validation-summary="All" role="alert"></div>
 
     <div class="mb-3">
         <label asp-for="Nome" class="form-label">Nome</label>
 
         <input asp-for="Nome"
                class="form-control"
-               placeholder="Digite o nome do aluno" />
+               placeholder="Digite o nome do aluno"
+               maxlength="100"
+               required />
+        <span asp-validation-for="Nome"></span>
     </div>
 
     <div class="mb-3">
@@ -23,7 +26,10 @@
         <input asp-for="Email"
                type="email"
                class="form-control"
-               placeholder="Digite o e-mail do aluno" />
+               placeholder="Digite o e-mail do aluno"
+               maxlength="150"
+               required />
+        <span asp-validation-for="Email"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">
