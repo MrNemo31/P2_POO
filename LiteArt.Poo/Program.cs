@@ -1,4 +1,5 @@
 using LiteArt.Poo.Data;
+using LiteArt.Poo.Previa;
 using LiteArt.Poo.Repositories.Interfaces;
 using LiteArt.Poo.Repositories.Dapper;
 
@@ -24,6 +25,8 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
+
+app.MapearPaginasDePrevia();
 
 app.MapControllerRoute(
     name: "default",
