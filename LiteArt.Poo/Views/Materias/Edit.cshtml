@@ -4,14 +4,18 @@
     ViewData["Title"] = "Editar Matéria";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/materia-formulario.css" asp-append-version="true" />
+}
+
 <h1>Editar Matéria</h1>
 
-<form asp-controller="Materia" asp-action="Edit" method="post">
-    <div asp-validation-summary="All" role="alert"></div>
+<form asp-controller="Materia" asp-action="Edit" method="post" class="materia-form">
+    <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
 
     <input type="hidden" asp-for="IdMateria" />
 
-    <div class="mb-3">
+    <div class="materia-field">
         <label asp-for="Nome" class="form-label">
             Nome da matéria
         </label>
@@ -19,14 +23,14 @@
         <span asp-validation-for="Nome"></span>
     </div>
 
-    <div class="mb-3">
+    <div class="materia-field">
         <label asp-for="Descricao" class="form-label">
             Descrição
         </label>
-        <textarea asp-for="Descricao" class="form-control"></textarea>
+        <textarea asp-for="Descricao" class="form-control" rows="5"></textarea>
     </div>
 
-    <div class="mb-3">
+    <div class="materia-field">
         <label asp-for="IdAdministrador" class="form-label">
             ID do administrador
         </label>
@@ -35,13 +39,15 @@
             <span asp-validation-for="IdAdministrador"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">
-        Salvar alterações
-    </button>
+    <div class="materia-actions">
+        <button type="submit" class="button button-primary">
+            Salvar alterações
+        </button>
 
-    <a asp-controller="Materia" asp-action="Index"
-       class="btn btn-secondary">
-        Cancelar
-    </a>
+        <a asp-controller="Materia" asp-action="Index"
+           class="button button-secondary">
+            Cancelar
+        </a>
 
+    </div>
 </form>

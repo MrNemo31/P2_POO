@@ -29,10 +29,6 @@
         </div>
     </header>
     <main id="conteudo" class="container" tabindex="-1">
-        @if (pagina is not ("Questao" or "Estudo" or "Historico"))
-        {
-            <div class="preview-note"><span class="preview-dot" aria-hidden="true"></span><strong>Modo de prévia</strong><span>Carregamento de dados e ações aguardam integração com o back-end.</span></div>
-        }
         @RenderBody()
     </main>
     <footer class="site-footer"><div class="container footer-inner"><span><strong>LiteArt POO</strong></span><span>Projeto acadêmico · FATEC Ribeirão Preto</span></div></footer>

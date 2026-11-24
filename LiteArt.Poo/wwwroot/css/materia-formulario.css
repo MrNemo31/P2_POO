@@ -1,0 +1,13 @@
+.materia-form { max-width: 760px; margin-top: 28px; padding: 28px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.materia-field { margin-bottom: 22px; }
+.materia-field label { display: block; margin-bottom: 8px; font-weight: 600; }
+.materia-field input, .materia-field textarea { display: block; width: 100%; min-height: 46px; border: 1px solid #cfc1b0; border-radius: 6px; background: #fffefa; color: var(--ink); padding: 11px 13px; }
+.materia-field textarea { resize: vertical; }
+.materia-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.materia-form .field-validation-error, .materia-form .validation-summary-errors { color: var(--red); font-size: 13px; }
+.materia-form .validation-summary-errors { margin-bottom: 22px; }
+.materia-form .validation-summary-valid { display: none; }
+.materia-form .input-validation-error { border-color: var(--red); }
+@media (max-width: 520px) {
+    .materia-form { padding: 20px; }
+}

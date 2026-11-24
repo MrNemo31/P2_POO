@@ -114,23 +114,64 @@ namespace LiteArt.Poo.Controllers
         // Recebe os dados alterados e atualiza a matéria no banco.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Materia materia)
+        public async Task<IActionResult> Edit(MateriaFormularioViewModel modelo)
         {
+            if (modelo.IdMateria <= 0)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
-                return View("~/Views/Materias/Edit.cshtml", materia);
+                return View("~/Views/Materias/Edit.cshtml", modelo);
             }
 
-            var atualizado = await _materiaRepository.Atualizar(materia);
-
-            if (!atualizado)
+            try
             {
-                return NotFound();
+                var materia = await _materiaRepository.BuscarPorId(modelo.IdMateria);
+
+                if (materia == null)
+                {
+                    return NotFound();
+                }
+
+                var administrador = await _administradorConsulta.BuscarPorId(modelo.IdAdministrador);
+
+                if (administrador == null)
+                {
+                    ModelState.AddModelError(
+                        nameof(modelo.IdAdministrador),
+                        "O administrador informado não existe.");
+
+                    return View("~/Views/Materias/Edit.cshtml", modelo);
+                }
+
+                materia.EditarDados(modelo.Nome, modelo.Descricao, administrador);
+
+                var atualizado = await _materiaRepository.Atualizar(materia);
+
+                if (!atualizado)
+                {
+                    return NotFound();
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (Exception ex) when (ex is DbException or InvalidOperationException)
+            {
+                _logger.LogError(ex, "Erro ao atualizar matéria.");
+
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Não foi possível atualizar a matéria. Tente novamente.");
             }
 
-            return RedirectToAction(nameof(Index));
+            return View("~/Views/Materias/Edit.cshtml", modelo);
         }
-
 
         // Recebe a solicitação de exclusão de uma matéria.
         [HttpPost]

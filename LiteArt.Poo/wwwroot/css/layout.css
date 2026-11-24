@@ -37,9 +37,6 @@ nav a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight
 nav a:hover { background: #f6f1e9; color: var(--ink); }
 nav a[aria-current="page"] { color: var(--orange-dark); background: var(--orange-soft); }
 .menu-toggle { display: none; }
-.preview-note { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 12px; border-bottom: 1px solid var(--line); padding: 16px 0; }
-.preview-note strong { color: var(--ink); white-space: nowrap; font-weight: 600; }
-.preview-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex: 0 0 6px; }
 .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2.2px; color: var(--orange-dark); margin-bottom: 15px; }
 .lead { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 0; }
 .muted { color: var(--muted); font-size: 13px; }
@@ -70,8 +67,6 @@ nav a[aria-current="page"] { color: var(--orange-dark); background: var(--orange
     nav { width: 100%; flex-wrap: wrap; padding-top: 14px; gap: 4px; }
     .js nav:not(.is-open) { display: none; }
     nav a { flex: 1 1 45%; padding: 10px 12px; font-size: 13px; }
-    .preview-note { flex-wrap: wrap; gap: 6px 9px; font-size: 11px; }
-    .preview-note > span:last-child { flex-basis: 100%; padding-left: 15px; }
     .lead { font-size: 14px; }
     .footer-inner { flex-direction: column; gap: 8px; }
 }
