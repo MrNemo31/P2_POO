@@ -7,6 +7,7 @@
 <h1>Editar Matéria</h1>
 
 <form asp-controller="Materia" asp-action="Edit" method="post">
+    <div asp-validation-summary="All" role="alert"></div>
 
     <input type="hidden" asp-for="IdMateria" />
 
@@ -14,7 +15,8 @@
         <label asp-for="Nome" class="form-label">
             Nome da matéria
         </label>
-        <input asp-for="Nome" class="form-control" required />
+        <input asp-for="Nome" class="form-control" maxlength="100" required />
+        <span asp-validation-for="Nome"></span>
     </div>
 
     <div class="mb-3">
@@ -30,6 +32,7 @@
         </label>
         <input asp-for="IdAdministrador" type="number"
                class="form-control" min="1" required />
+            <span asp-validation-for="IdAdministrador"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">
