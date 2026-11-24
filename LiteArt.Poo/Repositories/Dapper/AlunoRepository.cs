@@ -20,9 +20,9 @@ namespace LiteArt.Poo.Repositories.Dapper
         {
             const string sql = @"
                 SELECT
-                    id_aluno AS IdAluno,
                     nome AS Nome,
-                    email AS Email
+                    email AS Email,
+                    id_aluno AS IdAluno
                 FROM alunos
                 ORDER BY id_aluno;
             ";
@@ -37,9 +37,9 @@ namespace LiteArt.Poo.Repositories.Dapper
         {
             const string sql = @"
                 SELECT
-                    id_aluno AS IdAluno,
                     nome AS Nome,
-                    email AS Email
+                    email AS Email,
+                    id_aluno AS IdAluno
                 FROM alunos
                 WHERE id_aluno = @Id;
             ";
