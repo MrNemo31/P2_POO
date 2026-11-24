@@ -61,7 +61,7 @@ namespace LiteArt.Poo.Models.Entities
         {
             if (string.IsNullOrWhiteSpace(novoNome))
                 throw new ArgumentException("O nome do aluno não pode ser nulo ou vazio.", nameof(novoNome));
-            if (ValidarEmail(novoEmail.Trim()))
+            if (ValidarEmail(novoEmail))
             {
                 this.Nome = novoNome.Trim();
                 this.Email = novoEmail.Trim();
