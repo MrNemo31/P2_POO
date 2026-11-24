@@ -1,0 +1,18 @@
+@model AdministradorFormularioViewModel
+
+<div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+<input type="hidden" asp-for="IdAdministrador" />
+<div class="admin-field">
+    <label asp-for="Nome">Nome do administrador</label>
+    <input asp-for="Nome" maxlength="100" autocomplete="name" required />
+    <span asp-validation-for="Nome"></span>
+</div>
+<div class="admin-field">
+    <label asp-for="Email">E-mail</label>
+    <input asp-for="Email" type="email" maxlength="150" autocomplete="email" required />
+    <span asp-validation-for="Email"></span>
+</div>
+<div class="admin-actions">
+    <button type="submit" class="button button-primary">Salvar</button>
+    <a asp-controller="Administrador" asp-action="Index" class="button button-secondary">Cancelar</a>
+</div>

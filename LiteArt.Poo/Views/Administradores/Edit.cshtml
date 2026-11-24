@@ -1,0 +1,13 @@
+@model AdministradorFormularioViewModel
+@{
+    ViewData["Title"] = "Editar administrador";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/administradores.css" asp-append-version="true" />
+}
+<section class="admin-page">
+    <h1>Editar administrador</h1>
+    <form asp-controller="Administrador" asp-action="Edit" method="post" class="admin-form">
+        <partial name="~/Views/Administradores/_Formulario.cshtml" model="Model" />
+    </form>
+</section>

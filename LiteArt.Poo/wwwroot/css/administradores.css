@@ -1,0 +1,22 @@
+.admin-page { padding-block: 32px; }
+.admin-heading, .admin-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.admin-heading { margin-bottom: 24px; flex-wrap: wrap; }
+.admin-heading h1 { margin: 0; }
+.admin-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.admin-card, .admin-form, .admin-empty { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.admin-details { min-width: 0; overflow-wrap: anywhere; }
+.admin-card h2 { margin: 6px 0; font-size: 24px; }
+.admin-card p { margin-bottom: 0; color: var(--muted); }
+.admin-form { max-width: 760px; margin-top: 28px; }
+.admin-field { margin-bottom: 22px; }
+.admin-field label { display: block; margin-bottom: 8px; font-weight: 600; }
+.admin-field input { width: 100%; min-height: 46px; border: 1px solid #cfc1b0; border-radius: 6px; background: #fffefa; color: var(--ink); padding: 11px 13px; }
+.admin-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.admin-error, .admin-form .field-validation-error, .admin-form .validation-summary-errors { color: var(--red); }
+.admin-form .validation-summary-errors { margin-bottom: 22px; font-size: 13px; }
+.admin-form .validation-summary-valid { display: none; }
+.admin-form .input-validation-error { border-color: var(--red); }
+@media (max-width: 520px) {
+    .admin-card { align-items: start; flex-direction: column; }
+    .admin-form, .admin-card { padding: 20px; }
+}

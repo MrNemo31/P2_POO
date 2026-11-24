@@ -1,0 +1,38 @@
+@model IEnumerable<LiteArt.Poo.Models.Entities.Administrador>
+@{
+    ViewData["Title"] = "Administradores";
+    var erro = ViewData["ErroConsulta"] as string ?? TempData["Erro"] as string;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/administradores.css" asp-append-version="true" />
+}
+<section class="admin-page">
+    <div class="admin-heading">
+        <h1>Administradores</h1>
+        <a asp-controller="Administrador" asp-action="Create" class="button button-primary">Novo administrador</a>
+    </div>
+    @if (!string.IsNullOrEmpty(erro))
+    {
+        <p class="admin-error" role="alert">@erro</p>
+    }
+    else if (!Model.Any())
+    {
+        <p class="admin-empty">Nenhum administrador cadastrado.</p>
+    }
+    else
+    {
+        <ul class="admin-list">
+            @foreach (var administrador in Model)
+            {
+                <li class="admin-card">
+                    <div class="admin-details">
+                        <span class="muted">ID @administrador.IdAdministrador</span>
+                        <h2>@administrador.Nome</h2>
+                        <p>@administrador.Email</p>
+                    </div>
+                    <a asp-controller="Administrador" asp-action="Edit" asp-route-id="@administrador.IdAdministrador" class="button button-secondary">Editar<span class="sr-only"> @administrador.Nome</span></a>
+                </li>
+            }
+        </ul>
+    }
+</section>
