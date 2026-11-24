@@ -2,6 +2,7 @@
 .home-hero h1 { font-size: clamp(38px, 4.2vw, 58px); line-height: 1.15; letter-spacing: -2px; }
 .home-hero em { color: var(--orange); font-weight: 400; }
 .hero-copy .lead { max-width: 480px; font-size: 17px; margin: 22px 0 28px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero-footnote { color: var(--muted); font-size: 12px; margin-top: 17px; }
 .hero-art { position: relative; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, #f4e4cd 0%, #f8efdf 56%, transparent 57%); }
 .art-orbit { position: absolute; width: 330px; height: 195px; top: 65px; left: 50%; margin-left: -165px; border: 1px solid #ccb692; border-radius: 50%; transform: rotate(-22deg); }
