@@ -1,3 +1,4 @@
+using System.Data;
 using Dapper;
 using LiteArt.Poo.Data;
 using LiteArt.Poo.Models.Entities;
@@ -31,6 +32,7 @@ namespace LiteArt.Poo.Repositories.Dapper
         // Cadastra uma nova questão.
         public async Task<int> Inserir(Questao questao)
         {
+            var parametros = CriarParametros(questao);
             const string sql = @"
                 INSERT INTO questoes (
                     enunciado,
@@ -50,13 +52,34 @@ namespace LiteArt.Poo.Repositories.Dapper
             ";
 
             using var conexao = _databaseConnection.CriarConexao();
+            await conexao.OpenAsync();
+            await using var transacao = await conexao.BeginTransactionAsync();
 
-            return await conexao.QuerySingleAsync<int>(sql, questao);
+            try
+            {
+                var id = await conexao.QuerySingleAsync<int>(sql, parametros, transacao);
+
+                await InserirMaterias(conexao, transacao, id, questao.Materias);
+
+                if (questao is MultiplaEscolha multiplaEscolha)
+                {
+                    await InserirAlternativas(conexao, transacao, id, multiplaEscolha.Opcoes);
+                }
+
+                await transacao.CommitAsync();
+                return id;
+            }
+            catch
+            {
+                await transacao.RollbackAsync();
+                throw;
+            }
         }
 
         // Atualiza uma questão existente.
         public async Task<bool> Atualizar(Questao questao)
         {
+            var parametros = CriarParametros(questao);
             const string sql = @"
                 UPDATE questoes
                 SET
@@ -69,10 +92,42 @@ namespace LiteArt.Poo.Repositories.Dapper
             ";
 
             using var conexao = _databaseConnection.CriarConexao();
+            await conexao.OpenAsync();
+            await using var transacao = await conexao.BeginTransactionAsync();
 
-            var linhasAfetadas = await conexao.ExecuteAsync(sql, questao);
+            try
+            {
+                // Serializa a edição da questão e protege a verificação do histórico.
+                var id = await conexao.QuerySingleOrDefaultAsync<int?>(
+                    "SELECT id_questao FROM questoes WHERE id_questao = @Id FOR UPDATE;",
+                    new { Id = questao.IdQuestao },
+                    transacao
+                );
 
-            return linhasAfetadas > 0;
+                if (!id.HasValue)
+                {
+                    await transacao.RollbackAsync();
+                    return false;
+                }
+
+                await conexao.ExecuteAsync(sql, parametros, transacao);
+
+                await conexao.ExecuteAsync(
+                    "DELETE FROM questoes_materias WHERE id_questao = @Id;",
+                    new { Id = questao.IdQuestao },
+                    transacao
+                );
+                await InserirMaterias(conexao, transacao, questao.IdQuestao, questao.Materias);
+                await AtualizarAlternativas(conexao, transacao, questao);
+
+                await transacao.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transacao.RollbackAsync();
+                throw;
+            }
         }
 
         // Exclui uma questão somente se não possuir tentativas.
@@ -97,6 +152,145 @@ namespace LiteArt.Poo.Repositories.Dapper
 
             return linhasAfetadas > 0;
         }
+        private static object CriarParametros(Questao questao)
+        {
+            ArgumentNullException.ThrowIfNull(questao);
+
+            var (tipo, respostaCorreta) = questao switch
+            {
+                MultiplaEscolha => ("MULTIPLA_ESCOLHA", (bool?)null),
+                VerdadeiroFalso vf => ("VERDADEIRO_FALSO", (bool?)vf.RespostaCorreta),
+                _ => throw new ArgumentException("Tipo de questão não suportado.", nameof(questao))
+            };
+
+            return new
+            {
+                questao.IdQuestao,
+                questao.Enunciado,
+                questao.Ativa,
+                TipoQuestao = tipo,
+                RespostaCorreta = respostaCorreta,
+                IdAdministrador = questao.Administrador.IdAdministrador
+            };
+        }
+
+        private static async Task InserirMaterias(
+            IDbConnection conexao,
+            IDbTransaction transacao,
+            int idQuestao,
+            IReadOnlyList<Materia> materias)
+        {
+            const string sql = @"
+                INSERT INTO questoes_materias (id_questao, id_materia)
+                VALUES (@IdQuestao, @IdMateria);
+            ";
+
+            var parametros = materias.Select(m => m.IdMateria)
+                .Distinct()
+                .Select(id => new { IdQuestao = idQuestao, IdMateria = id });
+
+            await conexao.ExecuteAsync(sql, parametros, transacao);
+        }
+
+        private static async Task InserirAlternativas(
+            IDbConnection conexao,
+            IDbTransaction transacao,
+            int idQuestao,
+            IEnumerable<Alternativa> alternativas)
+        {
+            const string sql = @"
+                INSERT INTO alternativas (id_questao, texto, correta)
+                VALUES (@IdQuestao, @Texto, @Correta);
+            ";
+
+            var parametros = alternativas.Select(a => new
+            {
+                IdQuestao = idQuestao,
+                a.Texto,
+                a.Correta
+            });
+
+            await conexao.ExecuteAsync(sql, parametros, transacao);
+        }
+
+        private static async Task AtualizarAlternativas(
+            IDbConnection conexao,
+            IDbTransaction transacao,
+            Questao questao)
+        {
+            IReadOnlyList<Alternativa> alternativas = questao is MultiplaEscolha multiplaEscolha
+                ? multiplaEscolha.Opcoes
+                : Array.Empty<Alternativa>();
+
+            var idsMantidos = alternativas.Where(a => a.IdAlternativa > 0)
+                .Select(a => a.IdAlternativa).ToArray();
+            var idsExistentes = (await conexao.QueryAsync<int>(
+                "SELECT id_alternativa FROM alternativas WHERE id_questao = @Id;",
+                new { Id = questao.IdQuestao },
+                transacao
+            )).ToArray();
+
+            if (idsMantidos.Distinct().Count() != idsMantidos.Length ||
+                idsMantidos.Except(idsExistentes).Any())
+            {
+                throw new ArgumentException(
+                    "As alternativas devem ter IDs únicos e pertencer à questão editada.",
+                    nameof(questao));
+            }
+
+            var idsRemovidos = idsExistentes.Except(idsMantidos).ToArray();
+
+            if (idsRemovidos.Length > 0)
+            {
+                const string consultaTentativas = @"
+                    SELECT EXISTS (
+                        SELECT 1
+                        FROM alternativas a
+                        INNER JOIN tentativas t
+                            ON t.id_questao = a.id_questao
+                            AND t.resposta = a.id_alternativa::text
+                        WHERE a.id_questao = @IdQuestao
+                            AND a.id_alternativa = ANY(@Ids)
+                    );
+                ";
+                var parametros = new { questao.IdQuestao, Ids = idsRemovidos };
+                var possuiTentativas = await conexao.QuerySingleAsync<bool>(
+                    consultaTentativas, parametros, transacao);
+
+                if (possuiTentativas)
+                {
+                    throw new ArgumentException(
+                        "Não é possível remover alternativas usadas em tentativas registradas.",
+                        nameof(questao));
+                }
+
+                await conexao.ExecuteAsync(
+                    "DELETE FROM alternativas WHERE id_questao = @IdQuestao AND id_alternativa = ANY(@Ids);",
+                    parametros,
+                    transacao
+                );
+            }
+
+            foreach (var alternativa in alternativas.Where(a => a.IdAlternativa > 0))
+            {
+                const string sql = @"
+                    UPDATE alternativas
+                    SET texto = @Texto, correta = @Correta
+                    WHERE id_questao = @IdQuestao AND id_alternativa = @IdAlternativa;
+                ";
+                await conexao.ExecuteAsync(sql, new
+                {
+                    questao.IdQuestao,
+                    alternativa.IdAlternativa,
+                    alternativa.Texto,
+                    alternativa.Correta
+                }, transacao);
+            }
+
+            await InserirAlternativas(conexao, transacao, questao.IdQuestao,
+                alternativas.Where(a => a.IdAlternativa == 0));
+        }
+
         private sealed record QuestaoRegistro(
             int IdQuestao,
             string Enunciado,
