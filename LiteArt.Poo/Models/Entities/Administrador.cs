@@ -43,5 +43,23 @@ namespace LiteArt.Poo.Models.Entities
             else
                 throw new ArgumentException("O email do administrador não é válido.", nameof(Email));
         }
+        public Administrador(string Nome, string Email, int IdAdministrador) : this(Nome, Email)
+        {
+            if (IdAdministrador <= 0)
+                throw new ArgumentException("O Id do administrador deve ser maior que zero.", nameof(IdAdministrador));
+            this.IdAdministrador = IdAdministrador;
+        }
+        public void EditarDados(string novoNome, string novoEmail)
+        {
+            if (string.IsNullOrWhiteSpace(novoNome))
+                throw new ArgumentException("O nome do administrador não pode ser nulo ou vazio.", nameof(novoNome));
+            if (ValidarEmail(novoEmail))
+            {
+                this.Nome = novoNome.Trim();
+                this.Email = novoEmail.Trim();
+            }
+            else
+                throw new ArgumentException("O email do administrador não é válido.", nameof(novoEmail));
+        }   
     }
 }

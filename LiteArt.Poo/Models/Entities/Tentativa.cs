@@ -1,3 +1,5 @@
+using LiteArt.Poo.Exceptions;  
+
 namespace LiteArt.Poo.Models.Entities
 {
     public class Tentativa
@@ -16,10 +18,23 @@ namespace LiteArt.Poo.Models.Entities
             if (string.IsNullOrWhiteSpace(Resposta))
                 throw new ArgumentException("A resposta não pode ser nula ou vazia.", nameof(Resposta));
             if (!Questao.Ativa)
-                throw new InvalidOperationException("Não é possível registrar uma tentativa para uma questão inativa.");   
+                throw new TentativaQuestaoInativaException("Não é possível registrar uma tentativa para uma questão inativa.");
             this.Resposta = Resposta;
             this.Acertou = Questao.AvaliarResposta(Resposta);
             this.DataHora = DateTime.Now;
+        }
+        public Tentativa(Aluno Aluno, Questao Questao, string Resposta, int IdTentativa, DateTime DataHora, bool Acertou)
+        {
+            this.Aluno = Aluno ?? throw new ArgumentNullException(nameof(Aluno), "O aluno não pode ser nulo.");
+            this.Questao = Questao ?? throw new ArgumentNullException(nameof(Questao), "A questão não pode ser nula.");
+            if (string.IsNullOrWhiteSpace(Resposta))
+                throw new ArgumentException("A resposta não pode ser nula ou vazia.", nameof(Resposta));
+            this.Resposta = Resposta;
+            if (IdTentativa <= 0)
+                throw new ArgumentException("O Id da tentativa deve ser maior que zero.", nameof(IdTentativa));
+            this.IdTentativa = IdTentativa;
+            this.DataHora = DataHora;
+            this.Acertou = Acertou;
         }
     }
 }

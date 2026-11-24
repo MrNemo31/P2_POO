@@ -22,5 +22,20 @@ namespace LiteArt.Poo.Models.Entities
             else 
                 this.Administrador = Administrador;
         }
+        public Materia(string Nome, string? Descricao, Administrador Administrador, int IdMateria) : this(Nome, Descricao, Administrador)
+        {
+            if (IdMateria <= 0)
+                throw new ArgumentException("O Id da matéria deve ser maior que zero.", nameof(IdMateria));
+            this.IdMateria = IdMateria;
+        }
+        public void EditarDados(string novoNome, string novaDescricao)
+        {
+            if (string.IsNullOrWhiteSpace(novoNome))
+                throw new ArgumentException("O nome da matéria não pode ser nulo ou vazio.", nameof(novoNome));
+            if (novaDescricao != null && novaDescricao.Length > 500)
+                throw new ArgumentException("A descrição da matéria não pode ter mais de 500 caracteres.", nameof(novaDescricao));
+            this.Nome = novoNome.Trim();
+            this.Descricao = novaDescricao?.Trim();
+        }  
     }
 }

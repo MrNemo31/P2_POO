@@ -20,5 +20,11 @@ namespace LiteArt.Poo.Models.Entities
             }
             this.Correta = Correta;
         }
+        public Alternativa(string Texto, bool Correta, int IdAlternativa) : this(Texto, Correta)
+        {
+            if (IdAlternativa <= 0)
+                throw new ArgumentException("O Id da alternativa deve ser maior que zero.", nameof(IdAlternativa));
+            this.IdAlternativa = IdAlternativa;
+        }
     }
 }

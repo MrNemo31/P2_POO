@@ -3,8 +3,8 @@ namespace LiteArt.Poo.Models.Entities
     
     public class MultiplaEscolha : Questao
     {
-        public List<Alternativa> Opcoes { get; private set; } = new List<Alternativa>();
-
+        private List<Alternativa> _opcoes = new List<Alternativa>();
+        public IReadOnlyList<Alternativa> Opcoes => this._opcoes.AsReadOnly();
         public MultiplaEscolha(string Enunciado, List<Alternativa> Opcoes, Administrador Administrador, List<Materia> Materias) : base(Enunciado, Administrador, Materias)
         {
             int contador = 0;
@@ -30,7 +30,13 @@ namespace LiteArt.Poo.Models.Entities
             {
                 throw new ArgumentException("A questão de múltipla escolha deve ter apenas uma opção correta.", nameof(Opcoes));
             }
-            this.Opcoes = new List<Alternativa>(Opcoes);
+            this._opcoes = new List<Alternativa>(Opcoes);
+        }
+        public MultiplaEscolha(string Enunciado, List<Alternativa> Opcoes, Administrador Administrador, List<Materia> Materias, int IdQuestao) : this(Enunciado, Opcoes, Administrador, Materias)
+        {
+            if (IdQuestao <= 0)
+                throw new ArgumentException("O Id da questão deve ser maior que zero.", nameof(IdQuestao));
+            this.IdQuestao = IdQuestao;
         }
 
         public override bool AvaliarResposta(string Resposta)
@@ -50,6 +56,34 @@ namespace LiteArt.Poo.Models.Entities
             }
 
             return false;
-                }
-            }
         }
+
+        public void EditarOpcoes(List<Alternativa> novasOpcoes)
+        {
+            int contador = 0;
+
+            if (novasOpcoes == null || novasOpcoes.Count < 2)
+            {
+                throw new ArgumentException("Uma questão de múltipla escolha deve ter pelo menos duas opções.", nameof(novasOpcoes));
+            }
+            for (int i = 0; i < novasOpcoes.Count; i++)
+            {
+                if (novasOpcoes[i] == null)
+                {
+                    throw new ArgumentException($"A opção na posição {i} não pode ser nula.", nameof(novasOpcoes));
+                }
+
+                if (novasOpcoes[i].Correta)
+                {
+                    contador += 1;
+                }
+
+            }
+            if (contador != 1)
+            {
+                throw new ArgumentException("A questão de múltipla escolha deve ter apenas uma opção correta.", nameof(novasOpcoes));
+            }
+            this._opcoes = new List<Alternativa>(novasOpcoes);
+        }        
+    }
+}

@@ -9,7 +9,8 @@ namespace LiteArt.Poo.Models.Entities
         public int IdAluno {get; private set;}    
         public string Nome { get; private set; }
         public string Email { get; private set; }
-        public List<Tentativa> Tentativas { get; private set; } = new List<Tentativa>();
+        private List<Tentativa> _tentativas = new List<Tentativa>();
+        public IReadOnlyList<Tentativa> Tentativas => this._tentativas.AsReadOnly();
         private bool ValidarEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -25,6 +26,7 @@ namespace LiteArt.Poo.Models.Entities
                 return false;
             }
         }
+        // CONSTRUTOR DE UM NOVO ALUNO
         public Aluno(string Nome, string Email)
         {
             if (string.IsNullOrWhiteSpace(Nome))
@@ -40,6 +42,12 @@ namespace LiteArt.Poo.Models.Entities
             else
                 throw new ArgumentException("O email do aluno não é válido.", nameof(Email));
         }
+        public Aluno (string Nome, string Email, int IdAluno) : this(Nome, Email)
+        {
+            if (IdAluno <= 0)
+                throw new ArgumentException("O Id do aluno deve ser maior que zero.", nameof(IdAluno));
+            this.IdAluno = IdAluno;
+        }
         public void AdicionarTentativa(Tentativa tentativa)
         {
             if (tentativa == null)
@@ -47,7 +55,19 @@ namespace LiteArt.Poo.Models.Entities
 
             if (ReferenceEquals(tentativa.Aluno, this) == false)
                 throw new InvalidOperationException("A tentativa não pertence a este aluno.");    
-            Tentativas.Add(tentativa);
+            this._tentativas.Add(tentativa);
         }
+        public void EditarDados(string novoNome, string novoEmail)
+        {
+            if (string.IsNullOrWhiteSpace(novoNome))
+                throw new ArgumentException("O nome do aluno não pode ser nulo ou vazio.", nameof(novoNome));
+            if (ValidarEmail(novoEmail.Trim()))
+            {
+                this.Nome = novoNome.Trim();
+                this.Email = novoEmail.Trim();
+            }
+            else
+                throw new ArgumentException("O email do aluno não é válido.", nameof(novoEmail));
+        }    
     }
 }
