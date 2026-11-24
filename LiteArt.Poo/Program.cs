@@ -6,10 +6,7 @@ using LiteArt.Poo.Repositories.Dapper;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuracao local fora do Git; variaveis de ambiente e argumentos mantem prioridade.
-builder.Configuration
-    .AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true)
-    .AddEnvironmentVariables()
-    .AddCommandLine(args);
+
 
 builder.Services.AddControllersWithViews();
 
