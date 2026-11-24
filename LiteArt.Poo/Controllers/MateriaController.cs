@@ -19,7 +19,7 @@ namespace LiteArt.Poo.Controllers
         // Lista todas as matérias cadastradas.
         public async Task<IActionResult> Index()
         {
-            var materias = await _materiaRepository.ListarTodas();
+            var materias = await _materiaRepository.ListarTodos();
 
             return View("~/Views/Materias/Index.cshtml", materias);
         }

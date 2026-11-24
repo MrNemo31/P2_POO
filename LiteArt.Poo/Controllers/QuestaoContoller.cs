@@ -17,7 +17,7 @@ namespace LiteArt.Poo.Controllers
         // Lista todas as questões.
         public async Task<IActionResult> Index()
         {
-            var questoes = await _questaoRepository.ListarTodas();
+            var questoes = await _questaoRepository.ListarTodos();
 
             return View("~/Views/Questoes/Index.cshtml", questoes);
         }

@@ -1,20 +1,8 @@
-// Arquivo responsavel pela listagem das implementações que devem ser feitas(Função de uma Interface)
-
-
 using LiteArt.Poo.Models.Entities;
 
 namespace LiteArt.Poo.Repositories.Interfaces
 {
-    public interface IMateriaRepository
+    public interface IMateriaRepository : IRepository<Materia>
     {
-        Task<IEnumerable<Materia>> ListarTodas();
-
-        Task<Materia?> BuscarPorId(int id);
-
-        Task<int> Inserir(Materia materia);
-
-        Task<bool> Atualizar(Materia materia);
-
-        Task<bool> Excluir(int id);
     }
 }

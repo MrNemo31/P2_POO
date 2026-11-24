@@ -1,6 +1,3 @@
-// Arquivo responsavel pelas consultas ao banco de dados
-
-
 using Dapper;
 using LiteArt.Poo.Data;
 using LiteArt.Poo.Models.Entities;
@@ -17,7 +14,7 @@ namespace LiteArt.Poo.Repositories.Dapper
             _databaseConnection = databaseConnection;
         }
 
-        public async Task<IEnumerable<Materia>> ListarTodas()
+        public async Task<IEnumerable<Materia>> ListarTodos()
         {
             const string sql = @"
                 SELECT
