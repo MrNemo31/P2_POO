@@ -18,7 +18,7 @@ namespace LiteArt.Poo.Models.Entities
         }
         else
         {
-            this.Enunciado = Enunciado;
+            this.Enunciado = Enunciado.Trim();
         }
         if (Administrador == null)
             throw new ArgumentNullException(nameof(Administrador), "O administrador não pode ser nulo.");
