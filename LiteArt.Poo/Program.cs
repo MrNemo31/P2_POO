@@ -5,8 +5,14 @@ using LiteArt.Poo.Repositories.Dapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuracao local fora do Git; variaveis de ambiente e argumentos mantem prioridade.
+// Carrega as configurações locais do banco, que não são enviadas ao Git.
+builder.Configuration.AddJsonFile(
+    "appsettings.dev.json",
+    optional: true,
+    reloadOnChange: true
+);
 
+// Configuracao local fora do Git; variaveis de ambiente e argumentos mantem prioridade.
 
 builder.Services.AddControllersWithViews();
 

@@ -11,9 +11,14 @@ namespace LiteArt.Poo.Data
         {
             _connectionString = configuration
                 .GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException(
-                    "String de conexão não encontrada."
+                ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(_connectionString))
+            {
+                throw new InvalidOperationException(
+                    "String de conexão não encontrada ou vazia. Verifique o appsettings.dev.json."
                 );
+            }
         }
 
         public NpgsqlConnection CriarConexao()
