@@ -1,4 +1,3 @@
-using LiteArt.Poo.Previa;
 using LiteArt.Poo.Data;
 using LiteArt.Poo.Repositories.Interfaces;
 using LiteArt.Poo.Repositories.Dapper;
@@ -18,14 +17,12 @@ builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IQuestaoRepository, QuestaoRepository>();
 
 builder.Services.AddScoped<IAdministradorConsulta, AdministradorConsulta>();
+builder.Services.AddScoped<IRegistroTentativa, RegistroTentativa>();
 
 var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
-
-// A resolução ainda usa a prévia; questões são atendidas pelo controller MVC.
-app.MapearResolucaoQuestaoPrevia();
 
 app.MapControllerRoute(
     name: "default",

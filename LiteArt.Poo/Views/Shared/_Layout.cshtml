@@ -22,14 +22,14 @@
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navegacao">Menu <span aria-hidden="true">☰</span></button>
             <nav id="navegacao" aria-label="Navegação principal">
                 <a href="@Url.Content("~/")" aria-current="@(pagina == "Home" ? "page" : null)">Início</a>
-                <a href="@Url.Content("~/Estudo")" aria-current="@(pagina == "Estudo" ? "page" : null)">Prévia de resolução</a>
+                <a href="@Url.Content("~/Estudo")" aria-current="@(pagina == "Estudo" ? "page" : null)">Resolver questões</a>
                 <a href="@Url.Content("~/Questoes")" aria-current="@(pagina is "Questao" or "Questoes" ? "page" : null)">Banco de questões</a>
                 <a href="@Url.Content("~/Historico")" aria-current="@(pagina == "Historico" ? "page" : null)">Histórico</a>
             </nav>
         </div>
     </header>
     <main id="conteudo" class="container" tabindex="-1">
-        @if (pagina != "Questao")
+        @if (pagina is not ("Questao" or "Estudo"))
         {
             <div class="preview-note"><span class="preview-dot" aria-hidden="true"></span><strong>Modo de prévia</strong><span>Carregamento de dados e ações aguardam integração com o back-end.</span></div>
         }

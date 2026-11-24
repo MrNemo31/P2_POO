@@ -1,4 +1,4 @@
-// Ajusta somente a navegação dos filtros, sem consultar ou gravar dados.
+// Mantém aluno e matéria na navegação dos filtros.
 document.querySelectorAll("[data-resolution-filter]").forEach((form) => {
     form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -11,7 +11,10 @@ document.querySelectorAll("[data-resolution-filter]").forEach((form) => {
     });
 });
 
-// Avaliação e envio de respostas pertencem à integração com o back-end.
+// O controller avalia e registra a resposta. Evita cliques repetidos no envio.
 document.querySelectorAll("[data-resolution-form]").forEach((form) => {
-    form.addEventListener("submit", (event) => event.preventDefault());
+    form.addEventListener("submit", () => {
+        const button = form.querySelector("button[type=submit]");
+        if (button) button.disabled = true;
+    });
 });

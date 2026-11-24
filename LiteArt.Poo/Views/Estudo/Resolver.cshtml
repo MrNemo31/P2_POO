@@ -1,39 +1,71 @@
 @model ResolverViewModel
 @{
-    ViewData["Title"] = "Conferir resolução";
+    ViewData["Title"] = "Registrar resolução";
 }
-<a class="back-link" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">← Prévia de resolução</a>
-<div class="page-heading"><div><p class="eyebrow">CONFERÊNCIA DE CONTEÚDO</p><h1>Conferir resolução</h1><p class="lead">Revise o enunciado e as opções de resposta como serão exibidos ao aluno.</p></div></div>
+<a class="back-link" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">← Resolver questões</a>
+<div class="page-heading"><div><p class="eyebrow">REGISTRO DE RESPOSTAS</p><h1>Registrar resolução</h1><p class="lead">Cada envio registra uma nova tentativa, preservando as anteriores.</p></div></div>
+<div asp-validation-summary="All" class="validation-summary" role="alert"></div>
 @if (Model.Questao is null)
 {
-    <div class="panel empty-state"><h2>Nenhuma questão carregada</h2><p>A visualização da questão ficará disponível após a integração com o back-end.</p></div>
+    <div class="panel empty-state"><h2>Questão indisponível</h2><p>Volte à lista e tente novamente.</p></div>
 }
 else
 {
-<form class="panel solve-panel" data-resolution-form novalidate>
-    <input asp-for="MateriaId" type="hidden" />
-    <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
-    <div class="field student-field"><label asp-for="AlunoId">Aluno</label><select asp-for="AlunoId"><option value="">Selecione um aluno</option>@foreach (var aluno in Model.Alunos) { <option value="@aluno.Id">@aluno.Nome</option> }</select><span asp-validation-for="AlunoId" class="field-error"></span></div>
-    <div class="question-prompt"><span class="item-number">QUESTÃO @Model.Id.ToString("D2") · @Model.Questao.TipoTexto</span><partial name="_MateriaTags" model="Model.Questao.Materias" /><h2 class="question-full">@Model.Questao.Enunciado</h2></div>
-    <fieldset class="answer-options"><legend>Resposta</legend>
-        @if (Model.Questao.Tipo == "MultiplaEscolha")
-        {
-            @for (var i = 0; i < Model.Questao.Alternativas.Count; i++) { <label class="answer-option"><input asp-for="Resposta" type="radio" value="@i" id="resposta-@i" /><span class="option-letter" aria-hidden="true">@((char)('A' + i))</span><span>@Model.Questao.Alternativas[i]</span></label> }
-        }
-        else
-        {
-            <label class="answer-option"><input asp-for="Resposta" type="radio" value="true" id="resposta-verdadeiro" /><span>Verdadeiro</span></label><label class="answer-option"><input asp-for="Resposta" type="radio" value="false" id="resposta-falso" /><span>Falso</span></label>
-        }
-        <span asp-validation-for="Resposta" class="field-error"></span>
-    </fieldset>
-    @if (Model.Acertou is bool acertou)
-    {
-        <div class="feedback @(acertou ? "feedback-success" : "feedback-error")" role="status" aria-label="Resultado da resposta" aria-live="polite" aria-atomic="true">
-            <strong>@(acertou ? "Resposta correta." : "Resposta incorreta.")</strong>
+    <form class="panel solve-panel" data-resolution-form novalidate asp-controller="Estudo" asp-action="Resolver" asp-route-id="@Model.Id" method="post">
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="MateriaId" type="hidden" />
+        <div class="field student-field">
+            <label asp-for="AlunoId">Aluno</label>
+            <select asp-for="AlunoId" required>
+                <option value="">Selecione um aluno</option>
+                @foreach (var aluno in Model.Alunos)
+                {
+                    <option value="@aluno.Id">@aluno.Nome</option>
+                }
+            </select>
+            <span asp-validation-for="AlunoId" class="field-error"></span>
+            @if (Model.Alunos.Count == 0)
+            {
+                <p class="field-hint">Nenhum aluno disponível para registrar a resposta.</p>
+            }
         </div>
-    }
-    <div class="solve-actions"><p class="muted">A avaliação e o registro de respostas aguardam integração com o back-end.</p><div><a class="button button-secondary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">Voltar</a><button class="button button-primary" type="submit" disabled>Enviar resposta</button></div></div>
-</form>
+        <div class="question-prompt"><span class="item-number">QUESTÃO @Model.Id.ToString("D2") · @Model.Questao.TipoTexto</span><partial name="_MateriaTags" model="Model.Questao.Materias" /><h2 class="question-full">@Model.Questao.Enunciado</h2></div>
+        @if (!Model.Questao.Ativa)
+        {
+            <div class="notice notice-warning"><strong>Esta questão está inativa.</strong><p>Não é possível registrar novas respostas.</p></div>
+        }
+        <fieldset class="answer-options">
+            <legend>Resposta</legend>
+            @if (Model.Questao.Tipo == "MultiplaEscolha")
+            {
+                @for (var i = 0; i < Model.Questao.Alternativas.Count; i++)
+                {
+                    var alternativa = Model.Questao.Alternativas[i];
+                    <label class="answer-option"><input asp-for="Resposta" type="radio" value="@alternativa.Id" id="resposta-@alternativa.Id" /><span class="option-letter" aria-hidden="true">@(i + 1)</span><span>@alternativa.Texto</span></label>
+                }
+            }
+            else
+            {
+                <label class="answer-option"><input asp-for="Resposta" type="radio" value="true" id="resposta-verdadeiro" /><span>Verdadeiro</span></label>
+                <label class="answer-option"><input asp-for="Resposta" type="radio" value="false" id="resposta-falso" /><span>Falso</span></label>
+            }
+            <span asp-validation-for="Resposta" class="field-error"></span>
+        </fieldset>
+        @if (Model.Acertou is bool acertou)
+        {
+            <div class="feedback @(acertou ? "feedback-success" : "feedback-error")" role="status" aria-label="Resultado da resposta" aria-live="polite" aria-atomic="true">
+                <strong>@(acertou ? "Resposta correta." : "Resposta incorreta.")</strong>
+                <p>Tentativa registrada.</p>
+            </div>
+        }
+        <div class="solve-actions">
+            <p class="muted">O resultado será mostrado depois que a tentativa for registrada.</p>
+            <div>
+                <a class="button button-secondary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId">Voltar</a>
+                <button class="button button-primary" type="submit" disabled="@(!Model.Questao.Ativa || Model.Alunos.Count == 0)">@(Model.Acertou.HasValue ? "Registrar nova tentativa" : "Enviar resposta")</button>
+            </div>
+        </div>
+    </form>
 }
 
 @section Styles {

@@ -1,20 +1,65 @@
 @model EstudoViewModel
 @{
-    ViewData["Title"] = "Prévia de resolução";
+    ViewData["Title"] = "Resolver questões";
 }
-<div class="page-heading"><div><p class="eyebrow">CONFERÊNCIA DE CONTEÚDO</p><h1>Prévia de resolução</h1><p class="lead">Confira os enunciados e as opções que serão apresentados aos alunos.</p></div></div>
-<section class="panel" aria-label="Questões para conferência">
-    <div class="panel-toolbar"><form asp-route="EstudoIndex" method="get" class="filter-form" data-resolution-filter>
-        <div class="field compact"><label for="alunoId">Aluno</label><select id="alunoId" name="alunoId"><option value="">Selecione um aluno</option>@foreach (var aluno in Model.Alunos) { <option value="@aluno.Id" selected="@(Model.AlunoId == aluno.Id)">@aluno.Nome</option> }</select></div>
-        <div class="field compact"><label for="materiaId">Matéria</label><select id="materiaId" name="materiaId"><option value="">Todas as matérias</option>@foreach (var materia in Model.Materias) { <option value="@materia.Id" selected="@(Model.MateriaId == materia.Id)">@materia.Nome</option> }</select></div>
-        <button class="button button-secondary" type="submit">Aplicar</button>
-    </form><span class="result-count">@Model.Questoes.Count @(Model.Questoes.Count == 1 ? "questão" : "questões")</span></div>
-    @if (Model.Questoes.Count == 0) { <div class="empty-state"><h2>Nenhuma questão encontrada</h2><p>As questões e os alunos serão carregados após a integração com o back-end.</p><a class="button button-secondary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId">Ver todas as questões</a></div> }
-    else
+<div class="page-heading">
+    <div><p class="eyebrow">REGISTRO DE RESPOSTAS</p><h1>Resolver questões</h1><p class="lead">Selecione o aluno e registre suas respostas para acompanhar os resultados.</p></div>
+</div>
+@if (ViewData["ErroConsulta"] is string erro)
+{
+    <div class="notice notice-warning" role="alert">@erro</div>
+}
+else
+{
+    @if (Model.Alunos.Count == 0)
     {
-        <ul class="question-list study-list">@foreach (var questao in Model.Questoes) { <li class="question-row"><div class="question-main"><span class="item-number">QUESTÃO @questao.Id.ToString("D2") · @questao.TipoTexto</span><h2>@questao.Trecho</h2><partial name="_MateriaTags" model="questao.Materias" /></div><a class="button button-secondary" asp-route="EstudoResolver" asp-route-id="@questao.Id" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId" aria-label="Conferir questão @questao.Id">Conferir <span aria-hidden="true">↗</span></a></li> }</ul>
+        <div class="notice notice-warning"><strong>Nenhum aluno cadastrado.</strong><p>Cadastre um aluno antes de registrar respostas.</p><a asp-controller="Aluno" asp-action="Create">Cadastrar aluno</a></div>
     }
-</section>
+    <section class="panel" aria-label="Questões para resolução">
+        <div class="panel-toolbar">
+            <form asp-route="EstudoIndex" method="get" class="filter-form" data-resolution-filter>
+                <div class="field compact">
+                    <label for="alunoId">Aluno</label>
+                    <select id="alunoId" name="alunoId">
+                        <option value="">Selecione um aluno</option>
+                        @foreach (var aluno in Model.Alunos)
+                        {
+                            <option value="@aluno.Id" selected="@(Model.AlunoId == aluno.Id)">@aluno.Nome</option>
+                        }
+                    </select>
+                </div>
+                <div class="field compact">
+                    <label for="materiaId">Matéria</label>
+                    <select id="materiaId" name="materiaId">
+                        <option value="">Todas as matérias</option>
+                        @foreach (var materia in Model.Materias)
+                        {
+                            <option value="@materia.Id" selected="@(Model.MateriaId == materia.Id)">@materia.Nome</option>
+                        }
+                    </select>
+                </div>
+                <button class="button button-secondary" type="submit">Aplicar</button>
+            </form>
+            <span class="result-count">@Model.Questoes.Count @(Model.Questoes.Count == 1 ? "questão" : "questões")</span>
+        </div>
+        @if (Model.Questoes.Count == 0)
+        {
+            <div class="empty-state"><h2>Nenhuma questão ativa encontrada</h2><p>Escolha outra matéria ou cadastre uma questão no banco.</p><a class="button button-secondary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId">Ver todas as questões</a></div>
+        }
+        else
+        {
+            <ul class="question-list study-list">
+                @foreach (var questao in Model.Questoes)
+                {
+                    <li class="question-row">
+                        <div class="question-main"><span class="item-number">QUESTÃO @questao.Id.ToString("D2") · @questao.TipoTexto</span><h2>@questao.Trecho</h2><partial name="_MateriaTags" model="questao.Materias" /></div>
+                        <a class="button button-secondary" asp-route="EstudoResolver" asp-route-id="@questao.Id" asp-route-alunoId="@Model.AlunoId" asp-route-materiaId="@Model.MateriaId" aria-label="Resolver questão @questao.Id">Resolver <span aria-hidden="true">↗</span></a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+}
 
 @section Styles {
     <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
