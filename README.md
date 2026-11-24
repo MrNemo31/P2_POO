@@ -18,7 +18,7 @@ O grupo é composto por três integrantes:
 | --- | --- | --- |
 | 1 | Natan Fernado Cardeal da Costa | 2840482511044 |
 | 2 | Gustavo Belotti Machado Luiz | 2840482511012 |
-| 3 | Luiz Henrique | Pendente |
+| 3 | Luiz Henrique Conti Malvestio | 2840482511008 |
 
 Os nomes completos de Gustavo Belotti e Luiz Henrique e seus respectivos RAs serão complementados posteriormente.
 

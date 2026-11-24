@@ -1,4 +1,3 @@
-
 using Dapper;
 using LiteArt.Poo.Data;
 using LiteArt.Poo.Models.Entities;
@@ -16,7 +15,7 @@ namespace LiteArt.Poo.Repositories.Dapper
         }
 
         // Lista todas as questões.
-        public async Task<IEnumerable<Questao>> ListarTodas()
+        public async Task<IEnumerable<Questao>> ListarTodos()
         {
             const string sql = @"
                 SELECT

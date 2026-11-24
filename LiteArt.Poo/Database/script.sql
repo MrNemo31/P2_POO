@@ -1,8 +1,3 @@
--- LiteArt POO - PostgreSQL (proposta a confirmar com a equipe).
--- Arquivo reservado para a próxima etapa; não contém SQL executável.
--- Implementar o DDL das entidades e relacionamentos após validar a modelagem.
--- Incluir de 5 a 10 registros fictícios por tabela no DML da entrega final.
-
 -- LITEART POO
 -- Banco de Dados: PostgreSQL
 -- Criacao das tabelas
@@ -164,6 +159,7 @@ INSERT INTO questoes_materias (id_questao, id_materia)
 VALUES
 (1, 1),
 (2, 2),
+(2,4),
 (3, 3),
 (4, 5),
 (5, 4);
@@ -196,24 +192,24 @@ INSERT INTO tentativas
 (id_aluno, id_questao, resposta, acertou)
 VALUES
 -- Lucas Ferreira
-(1, 1, '56', TRUE),
-(1, 2, 'Sao Paulo', FALSE),
+(1, 1, '2', TRUE),
+(1, 2, '5', FALSE),
 
 -- Mariana Souza
-(2, 1, '64', FALSE),
-(2, 3, 'VERDADEIRO', TRUE),
+(2, 1, '3', FALSE),
+(2, 3, 'true', TRUE),
 
 -- Gabriel Oliveira
-(3, 2, 'Brasilia', TRUE),
-(3, 4, 'VERDADEIRO', FALSE),
+(3, 2, '6', TRUE),
+(3, 4, 'true', FALSE),
 
 -- Beatriz Santos
-(4, 5, 'Jupiter', TRUE),
-(4, 3, 'VERDADEIRO', TRUE),
+(4, 5, '11', TRUE),
+(4, 3, 'true', TRUE),
 
 -- Rafael Costa
-(5, 1, '56', TRUE),
-(5, 4, 'FALSO', TRUE),
+(5, 1, '2', TRUE),
+(5, 4, 'false', TRUE),
 
 -- Segunda tentativa de Lucas na questao 1
-(1, 1, '56', TRUE);
+(1, 1, '2', TRUE);
