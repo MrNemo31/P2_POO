@@ -1,3 +1,4 @@
+using System.Data.Common;
 using LiteArt.Poo.Models.ViewModels;
 using LiteArt.Poo.Models.Entities;
 using LiteArt.Poo.Repositories.Interfaces;
@@ -8,10 +9,17 @@ namespace LiteArt.Poo.Controllers
     public class MateriaController : Controller
     {
         private readonly IMateriaRepository _materiaRepository;
+        private readonly IAdministradorConsulta _administradorConsulta;
+        private readonly ILogger<MateriaController> _logger;
 
-        public MateriaController(IMateriaRepository materiaRepository)
+        public MateriaController(
+            IMateriaRepository materiaRepository,
+            IAdministradorConsulta administradorConsulta,
+            ILogger<MateriaController> logger)
         {
             _materiaRepository = materiaRepository;
+            _administradorConsulta = administradorConsulta;
+            _logger = logger;
         }
 
         // Lista todas as matérias cadastradas.
@@ -32,19 +40,55 @@ namespace LiteArt.Poo.Controllers
         // Recebe os dados do formulário e cadastra a matéria.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Materia materia)
+        public async Task<IActionResult> Create(
+            MateriaFormularioViewModel modelo)
         {
             if (!ModelState.IsValid)
             {
-                return View("~/Views/Materias/Create.cshtml", materia);
+                return View("~/Views/Materias/Create.cshtml", modelo);
             }
 
-            await _materiaRepository.Inserir(materia);
+            try
+            {
+                var administrador = await _administradorConsulta
+                    .BuscarPorId(modelo.IdAdministrador);
 
-            return RedirectToAction(nameof(Index));
+                if (administrador == null)
+                {
+                    ModelState.AddModelError(
+                        nameof(modelo.IdAdministrador),
+                        "O administrador informado não existe.");
+
+                    return View("~/Views/Materias/Create.cshtml", modelo);
+                }
+
+                var materia = new Materia(
+                    modelo.Nome,
+                    modelo.Descricao,
+                    administrador
+                );
+
+                await _materiaRepository.Inserir(materia);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex, "Erro ao cadastrar matéria.");
+
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Não foi possível cadastrar a matéria. Tente novamente.");
+            }
+
+            return View("~/Views/Materias/Create.cshtml", modelo);
         }
 
-        
+
         // Abre a tela de edição com os dados atuais da matéria.
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
