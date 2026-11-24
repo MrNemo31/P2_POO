@@ -1,4 +1,3 @@
-
 @model IEnumerable<LiteArt.Poo.Models.Entities.Materia>
 
 @{
@@ -40,7 +39,7 @@
                 <td>@materia.IdMateria</td>
                 <td>@materia.Nome</td>
                 <td>@materia.Descricao</td>
-                <td>@materia.IdAdministrador</td>
+                <td>@materia.Administrador.IdAdministrador</td>
 
                 <td>
                     <a asp-controller="Materia"

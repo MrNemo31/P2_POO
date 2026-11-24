@@ -1,6 +1,4 @@
-// Arquivo responsavel por receber as solicitações relacionadas as materias(Recebidas pelo MateriaRepository)
-// e utilizar nosso repositório para executar as operações necessarias
-
+using LiteArt.Poo.Models.ViewModels;
 using LiteArt.Poo.Models.Entities;
 using LiteArt.Poo.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +26,7 @@ namespace LiteArt.Poo.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View("~/Views/Materias/Create.cshtml");
+            return View("~/Views/Materias/Create.cshtml", new MateriaFormularioViewModel());
         }
 
         // Recebe os dados do formulário e cadastra a matéria.
@@ -58,7 +56,15 @@ namespace LiteArt.Poo.Controllers
                 return NotFound();
             }
 
-            return View("~/Views/Materias/Edit.cshtml", materia);
+            var modelo = new MateriaFormularioViewModel
+            {
+                IdMateria = materia.IdMateria,
+                Nome = materia.Nome,
+                Descricao = materia.Descricao,
+                IdAdministrador = materia.Administrador.IdAdministrador
+            };
+
+            return View("~/Views/Materias/Edit.cshtml", modelo);
         }
 
         // Recebe os dados alterados e atualiza a matéria no banco.
