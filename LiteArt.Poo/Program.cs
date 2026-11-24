@@ -18,6 +18,7 @@ builder.Services.AddScoped<IQuestaoRepository, QuestaoRepository>();
 
 builder.Services.AddScoped<IAdministradorConsulta, AdministradorConsulta>();
 builder.Services.AddScoped<IRegistroTentativa, RegistroTentativa>();
+builder.Services.AddScoped<IConsultaTentativas, ConsultaTentativas>();
 
 var app = builder.Build();
 

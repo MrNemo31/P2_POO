@@ -3,22 +3,63 @@
     ViewData["Title"] = "Histórico";
 }
 <div class="page-heading"><div><p class="eyebrow">CONSULTA DE ATIVIDADES</p><h1>Histórico de tentativas</h1><p class="lead">Consulte as tentativas e os resultados associados a cada aluno.</p></div></div>
-<section class="panel" aria-label="Tentativas do aluno">
-    <div class="panel-toolbar"><form asp-route="HistoricoIndex" method="get" class="filter-form" data-history-filter><div class="field compact"><label for="alunoId">Aluno</label><select name="alunoId" id="alunoId"><option value="">Selecione um aluno</option>@foreach (var aluno in Model.Alunos) { <option value="@aluno.Id" selected="@(Model.AlunoId == aluno.Id)">@aluno.Nome</option> }</select></div><button class="button button-secondary" type="submit">Ver histórico</button></form><span class="result-count">@Model.Tentativas.Count @(Model.Tentativas.Count == 1 ? "tentativa" : "tentativas")</span></div>
-    @if (!Model.Alunos.Any(a => a.Id == Model.AlunoId))
+@if (ViewData["ErroConsulta"] is string erroConsulta)
+{
+    <div class="notice notice-warning" role="alert">@erroConsulta</div>
+}
+else
+{
+    @if (ViewData["ErroAluno"] is string erroAluno)
     {
-        <div class="empty-state"><span class="empty-icon" aria-hidden="true">↺</span><h2>@(Model.Alunos.Count == 0 ? "Nenhum aluno disponível" : "Consultar tentativas por aluno")</h2><p>@(Model.Alunos.Count == 0 ? "Os alunos e as tentativas serão carregados após a integração com o back-end." : "Selecione um aluno para visualizar o histórico.")</p></div>
+        <div class="notice notice-warning" role="alert">@erroAluno</div>
     }
-    else if (Model.Tentativas.Count == 0)
-    {
-        <div class="empty-state"><span class="empty-icon" aria-hidden="true">✎</span><h2>Nenhuma tentativa registrada</h2><p>Este aluno não tem tentativas registradas.</p><a class="button button-primary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId">Conferir questões</a></div>
-    }
-    else
-    {
-        <ul class="question-list history-list">@foreach (var tentativa in Model.Tentativas) { <li class="question-row"><div class="question-main"><span class="item-number">@tentativa.Quando</span><h2>@tentativa.Questao.Enunciado</h2><partial name="_MateriaTags" model="tentativa.Questao.Materias" /></div><span class="result-badge @(tentativa.Acertou ? "result-success" : "result-error")">@(tentativa.Acertou ? "✓ Acertou" : "× Errou")</span></li> }</ul>
-    }
-</section>
-<p class="page-footnote">O histórico aguarda integração com o back-end.</p>
+    <section class="panel" aria-label="Tentativas do aluno">
+        <div class="panel-toolbar">
+            <form asp-route="HistoricoIndex" method="get" class="filter-form" data-history-filter>
+                <div class="field compact">
+                    <label for="alunoId">Aluno</label>
+                    <select name="alunoId" id="alunoId">
+                        <option value="">Selecione um aluno</option>
+                        @foreach (var aluno in Model.Alunos)
+                        {
+                            <option value="@aluno.Id" selected="@(Model.AlunoId == aluno.Id)">@aluno.Nome</option>
+                        }
+                    </select>
+                </div>
+                <button class="button button-secondary" type="submit">Ver histórico</button>
+            </form>
+            @if (Model.AlunoId.HasValue)
+            {
+                <span class="result-count">@Model.Tentativas.Count @(Model.Tentativas.Count == 1 ? "tentativa" : "tentativas")</span>
+            }
+        </div>
+        @if (!Model.Alunos.Any(a => a.Id == Model.AlunoId))
+        {
+            <div class="empty-state"><span class="empty-icon" aria-hidden="true">↺</span><h2>@(Model.Alunos.Count == 0 ? "Nenhum aluno cadastrado" : "Consultar tentativas por aluno")</h2><p>@(Model.Alunos.Count == 0 ? "Cadastre um aluno para começar a registrar tentativas." : "Selecione um aluno para visualizar o histórico.")</p></div>
+        }
+        else if (Model.Tentativas.Count == 0)
+        {
+            <div class="empty-state"><span class="empty-icon" aria-hidden="true">✎</span><h2>Nenhuma tentativa registrada</h2><p>Este aluno não tem tentativas registradas.</p><a class="button button-primary" asp-route="EstudoIndex" asp-route-alunoId="@Model.AlunoId">Resolver questões</a></div>
+        }
+        else
+        {
+            <ul class="question-list history-list">
+                @foreach (var tentativa in Model.Tentativas)
+                {
+                    <li class="question-row" data-tentativa-id="@tentativa.Id">
+                        <div class="question-main">
+                            <span class="item-number">TENTATIVA @tentativa.Id.ToString("D2") · @tentativa.Quando</span>
+                            <h2>@tentativa.Questao.Enunciado</h2>
+                            <partial name="_MateriaTags" model="tentativa.Questao.Materias" />
+                        </div>
+                        <span class="result-badge @(tentativa.Acertou ? "result-success" : "result-error")">@(tentativa.Acertou ? "✓ Acertou" : "× Errou")</span>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+}
+<p class="page-footnote">Cada envio de resposta gera uma nova tentativa. As tentativas anteriores são preservadas.</p>
 
 @section Styles {
     <link rel="stylesheet" href="~/css/banco-questoes.css" asp-append-version="true" />
