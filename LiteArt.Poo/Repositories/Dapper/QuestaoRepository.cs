@@ -152,6 +152,14 @@ namespace LiteArt.Poo.Repositories.Dapper
 
             return linhasAfetadas > 0;
         }
+        public async Task<bool> PossuiTentativas(int id)
+        {
+            using var conexao = _databaseConnection.CriarConexao();
+            return await conexao.QuerySingleAsync<bool>(
+                "SELECT EXISTS (SELECT 1 FROM tentativas WHERE id_questao = @Id);",
+                new { Id = id });
+        }
+
         private static object CriarParametros(Questao questao)
         {
             ArgumentNullException.ThrowIfNull(questao);

@@ -1,6 +1,5 @@
 document.querySelectorAll("[data-question-form]").forEach((form) => {
-    // Somente apresentação: alterna os campos e impede envio sem integração.
-    form.addEventListener("submit", (event) => event.preventDefault());
+    // Alterna os campos; a validação e a gravação são feitas pelo controller.
     const typeSelect = form.querySelector("[data-question-type]");
 
     function updateAnswerFields() {

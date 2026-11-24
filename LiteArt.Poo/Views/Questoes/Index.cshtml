@@ -3,6 +3,16 @@
     ViewData["Title"] = "Banco de questões";
 }
 <div class="page-heading"><div><p class="eyebrow">GESTÃO DE CONTEÚDO</p><h1>Banco de questões</h1><p class="lead">Consulte, cadastre e revise as questões do portal.</p></div><a class="button button-primary" href="@Url.Content("~/Questoes/Nova")"><span aria-hidden="true">＋</span> Nova questão</a></div>
+@if (TempData["Sucesso"] is string sucesso)
+{
+    <div class="notice" role="status">@sucesso</div>
+}
+@if ((ViewData["ErroConsulta"] ?? TempData["Erro"]) is string erro)
+{
+    <div class="notice notice-warning" role="alert">@erro</div>
+}
+@if (ViewData["ErroConsulta"] is null)
+{
 <section class="panel" aria-label="Lista de questões">
     <div class="panel-toolbar">
         <form method="get" asp-route="QuestoesIndex" class="filter-form">
@@ -14,7 +24,7 @@
     </div>
     @if (Model.Questoes.Count == 0)
     {
-        <div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h2>@(Model.MateriaId.HasValue ? "Nenhuma questão nesta matéria" : "Seu banco de questões está vazio")</h2><p>@(Model.MateriaId.HasValue ? "Escolha outra matéria ou remova o filtro para consultar o banco completo." : "As questões serão exibidas após a integração com o back-end.")</p><a class="button button-secondary" href="@Url.Content(Model.MateriaId.HasValue ? "~/Questoes" : "~/Questoes/Nova")">@(Model.MateriaId.HasValue ? "Ver todas as questões" : "Nova questão")</a></div>
+        <div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h2>@(Model.MateriaId.HasValue ? "Nenhuma questão nesta matéria" : "Seu banco de questões está vazio")</h2><p>@(Model.MateriaId.HasValue ? "Escolha outra matéria ou remova o filtro para consultar o banco completo." : "Cadastre a primeira questão para começar a organizar o banco.")</p><a class="button button-secondary" href="@Url.Content(Model.MateriaId.HasValue ? "~/Questoes" : "~/Questoes/Nova")">@(Model.MateriaId.HasValue ? "Ver todas as questões" : "Nova questão")</a></div>
     }
     else
     {
@@ -27,10 +37,11 @@
         </ul>
     }
 </section>
+}
 <p class="page-footnote">Uma questão pode reunir várias matérias e aparece apenas uma vez na lista.</p>
-@if (Model.Materias.Count == 0)
+@if (Model.Materias.Count == 0 && ViewData["ErroConsulta"] is null)
 {
-    <p class="page-footnote">Nenhuma matéria disponível. A lista de matérias aguarda integração com o back-end.</p>
+    <p class="page-footnote">Nenhuma matéria cadastrada.</p>
 }
 
 @section Styles {

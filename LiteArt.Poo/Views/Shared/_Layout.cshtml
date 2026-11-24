@@ -23,13 +23,16 @@
             <nav id="navegacao" aria-label="Navegação principal">
                 <a href="@Url.Content("~/")" aria-current="@(pagina == "Home" ? "page" : null)">Início</a>
                 <a href="@Url.Content("~/Estudo")" aria-current="@(pagina == "Estudo" ? "page" : null)">Prévia de resolução</a>
-                <a href="@Url.Content("~/Questoes")" aria-current="@(pagina == "Questoes" ? "page" : null)">Banco de questões</a>
+                <a href="@Url.Content("~/Questoes")" aria-current="@(pagina is "Questao" or "Questoes" ? "page" : null)">Banco de questões</a>
                 <a href="@Url.Content("~/Historico")" aria-current="@(pagina == "Historico" ? "page" : null)">Histórico</a>
             </nav>
         </div>
     </header>
     <main id="conteudo" class="container" tabindex="-1">
-        <div class="preview-note"><span class="preview-dot" aria-hidden="true"></span><strong>Modo de prévia</strong><span>Carregamento de dados e ações aguardam integração com o back-end.</span></div>
+        @if (pagina != "Questao")
+        {
+            <div class="preview-note"><span class="preview-dot" aria-hidden="true"></span><strong>Modo de prévia</strong><span>Carregamento de dados e ações aguardam integração com o back-end.</span></div>
+        }
         @RenderBody()
     </main>
     <footer class="site-footer"><div class="container footer-inner"><span><strong>LiteArt POO</strong></span><span>Projeto acadêmico · FATEC Ribeirão Preto</span></div></footer>

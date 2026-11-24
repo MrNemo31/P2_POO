@@ -24,10 +24,8 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Rota de apresentação do banco de questões; não altera dados.
-app.MapearBancoDeQuestoesPrevia();
+// A resolução ainda usa a prévia; questões são atendidas pelo controller MVC.
 app.MapearResolucaoQuestaoPrevia();
-app.MapearExclusaoQuestaoPrevia();
 
 app.MapControllerRoute(
     name: "default",

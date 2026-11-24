@@ -12,9 +12,9 @@ else
 {
 <section class="panel confirmation-panel">
     <span class="item-number">QUESTÃO @Model.Id.ToString("D2") · @Model.TipoTexto</span><h2 class="question-full">@Model.Enunciado</h2><partial name="_MateriaTags" model="Model.Materias" />
-    @if (Model.TemTentativas) { <div class="notice notice-warning"><strong>Esta questão tem tentativas registradas</strong><p>A exclusão está indisponível nesta prévia. A verificação definitiva será feita pelo back-end.</p></div> }
-    else { <div class="notice"><strong>Deseja confirmar a exclusão?</strong><p>A exclusão aguarda integração com o back-end.</p></div> }
-    <form class="confirmation-actions" data-question-delete><a class="button button-secondary" asp-route="QuestoesIndex">Cancelar</a><button class="button button-danger" type="submit" disabled>Confirmar exclusão</button></form>
+    @if (Model.TemTentativas) { <div class="notice notice-warning"><strong>Esta questão tem tentativas registradas</strong><p>A exclusão está bloqueada para preservar o histórico.</p></div> }
+    else { <div class="notice"><strong>Deseja confirmar a exclusão?</strong><p>A questão e seus vínculos serão removidos.</p></div> }
+    <form class="confirmation-actions" data-question-delete asp-controller="Questao" asp-action="ConfirmarExclusao" asp-route-id="@Model.Id" method="post"><a class="button button-secondary" asp-route="QuestoesIndex">Cancelar</a><button class="button button-danger" type="submit" disabled="@Model.TemTentativas">Confirmar exclusão</button></form>
 </section>
 }
 
