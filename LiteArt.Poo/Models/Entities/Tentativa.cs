@@ -19,7 +19,7 @@ namespace LiteArt.Poo.Models.Entities
                 throw new ArgumentException("A resposta não pode ser nula ou vazia.", nameof(Resposta));
             if (!Questao.Ativa)
                 throw new TentativaQuestaoInativaException("Não é possível registrar uma tentativa para uma questão inativa.");
-            this.Resposta = Resposta;
+            this.Resposta = Resposta.Trim();
             this.Acertou = Questao.AvaliarResposta(Resposta);
             this.DataHora = DateTime.Now;
         }
@@ -33,6 +33,8 @@ namespace LiteArt.Poo.Models.Entities
             if (IdTentativa <= 0)
                 throw new ArgumentException("O Id da tentativa deve ser maior que zero.", nameof(IdTentativa));
             this.IdTentativa = IdTentativa;
+            if (DataHora == default)
+                throw new ArgumentException("A data e o horário da tentativa são inválidos.", nameof(DataHora));
             this.DataHora = DataHora;
             this.Acertou = Acertou;
         }

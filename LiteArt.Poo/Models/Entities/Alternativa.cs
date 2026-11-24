@@ -16,7 +16,7 @@ namespace LiteArt.Poo.Models.Entities
             }
             else
             {
-                this.Texto = Texto;
+                this.Texto = Texto.Trim();
             }
             this.Correta = Correta;
         }

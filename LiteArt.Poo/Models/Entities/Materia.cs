@@ -16,6 +16,8 @@ namespace LiteArt.Poo.Models.Entities
             {
                 this.Nome = Nome.Trim();
             }
+            if (Descricao != null && Descricao.Length > 500)
+                throw new ArgumentException("A descrição da matéria não pode ter mais de 500 caracteres.", nameof(Descricao));
             this.Descricao = Descricao;
             if (Administrador == null)
                 throw new ArgumentNullException(nameof(Administrador), "O administrador não pode ser nulo.");
